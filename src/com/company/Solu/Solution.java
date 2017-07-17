@@ -7,6 +7,47 @@ import java.util.ArrayList;
  * Created by student on 2017/7/15.
  */
 public class Solution {
+
+    /*check whether overflow? <leetcode>
+*if overflow, the new result will not equal to the previous one.
+* */
+    public static int seven(int num) {
+        int remainder;
+        int result=0;
+        int temp;
+        while (true){
+            remainder = num%10;
+            temp = result;
+            result = result*10 + remainder;
+            if ((result - remainder)/10 != temp){
+                return 0;
+            }
+            num = num/10;
+            if (num == 0 ){
+                break;
+            }
+        }
+        return result;
+    }
+    /*
+    * 直接用int跟Integer.MAX_VALUE和Integer.MIN_VALUE比不行，那么可以用double来存result，
+    * 然后返回的结果在强制转换成int。
+    * 或者直接用BigInteger。
+    * */
+    public static int seven2(int num){
+        long result=0;
+        int remainder;
+        while (num!=0){
+            remainder = num%10;
+            result = result*10 + remainder;
+            if (result>Integer.MAX_VALUE||result<Integer.MIN_VALUE){
+                return 0;
+            }
+        }
+        return (int)result;
+    }
+
+
     public static int eight(String string) {
         /*用来判断是不是前一个字符是不是数字，比如“12 342”，让到字符'3'，
         因为前一个字符是空格，所以is_digitandlabel=false，所以会break掉程序。*/
