@@ -1,11 +1,14 @@
 package com.company.BasedClass;
 
+import com.company.Offers.Tree;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
 
 /**
- * Created by ÃÍ on 2017/7/17.
+ * Created by ï¿½ï¿½ on 2017/7/17.
  * binary tree
  */
 public class TreeNode {
@@ -55,7 +58,7 @@ public class TreeNode {
         return root;
     }
 
-    /*´´½¨¶þ²æÊ÷£¬´«ÈëÒ»¸öObjectÊý×énull´ú±í·ÖÖ§Îª¿Õ*/
+    /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Objectï¿½ï¿½ï¿½ï¿½nullï¿½ï¿½ï¿½ï¿½ï¿½Ö§Îªï¿½ï¿½*/
     public TreeNode createTree(Object[] vals) {
         for (Object obj:vals){
             if (obj!=null)
@@ -63,12 +66,12 @@ public class TreeNode {
             else
                 nodes.add(null);
         }
-        // ¶ÔÇ°lastParentIndex-1¸ö¸¸½Úµã°´ÕÕ¸¸½ÚµãÓëº¢×Ó½ÚµãµÄÊý×Ö¹ØÏµ½¨Á¢¶þ²æÊ÷
+        // ï¿½ï¿½Ç°lastParentIndex-1ï¿½ï¿½ï¿½ï¿½ï¿½Úµã°´ï¿½Õ¸ï¿½ï¿½Úµï¿½ï¿½ëº¢ï¿½Ó½Úµï¿½ï¿½ï¿½ï¿½ï¿½Ö¹ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         for (int i=0;i<nodes.size()/2-1;i++){
             nodes.get(i).left = nodes.get(i*2+1);
             nodes.get(i).right = nodes.get(i*2+2);
         }
-        //×îºóÒ»¸öparent¿ÉÄÜÃ»ÓÐright£¬µ¥¶À´¦Àí
+        //ï¿½ï¿½ï¿½Ò»ï¿½ï¿½parentï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½rightï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         int lastParentIndex = nodes.size()/2-1;
         nodes.get(lastParentIndex).left = nodes.get(lastParentIndex * 2 + 1);
         if(nodes.size()%2!=0)
@@ -87,8 +90,8 @@ public class TreeNode {
         return (height1 > height2)?height1+1:height2+1;
     }
 
-    /*µÝ¹é·¨ Ç°Ðò±éÀú¶þ²æÊ÷*/
-    public ArrayList<Object> preOrder(TreeNode root,ArrayList<Object> result){
+    /*ï¿½Ý¹é·¨ Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
+    public List<Object> preOrder(TreeNode root,List<Object> result){
         if (root==null){
             return result;
         }
@@ -99,7 +102,7 @@ public class TreeNode {
     }
 
 
-    /*µü´ú·¨ Ç°Ðò±éÀú¶þ²æÊ÷
+    /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     *
     * */
     public ArrayList<Object> preOrder(TreeNode root) {
@@ -114,15 +117,15 @@ public class TreeNode {
                 p = p.left;
             }
             if (!stack.empty()){
-                p = stack.peek();  //ÏÈÈ¡µ±Ç°½Úµã
-                stack.pop();    //ÔÙpop
+                p = stack.peek();  //ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½Úµï¿½
+                stack.pop();    //ï¿½ï¿½pop
                 p = p.right;
             }
         }
         return result;
     }
 
-    /*µÝ¹é£¬ÖÐÐò±éÀú*/
+    /*ï¿½Ý¹é£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
     public ArrayList<Object> inOrder(TreeNode root,ArrayList<Object> result){
         if (root == null)
             return result;
@@ -132,16 +135,16 @@ public class TreeNode {
         return result;
     }
 
-    /*µü´ú£¬ÖÐÐò±éÀú*/
-    public ArrayList<Object> inOrder(TreeNode root){
+    /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
+    public List<Object> inOrder(TreeNode root){
         Stack<TreeNode> stack = new Stack<>();
-        ArrayList<Object> result = new ArrayList<>();
+        List<Object> result = new ArrayList<>();
         while (!stack.empty()||root!=null){
             while (root!=null) {
                 stack.push(root);
                 root = root.left;
             }
-            while (!stack.empty()){
+            if (!stack.empty()){
                 root = stack.peek();
                 result.add(root.val);
                 stack.pop();
@@ -153,16 +156,23 @@ public class TreeNode {
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Object[] vals = new Object[]{1, 2, 3, 4, 5, 6, 7};
         TreeNode tree = new TreeNode().createTree(vals);
-//        ArrayList<Object> result1 = new ArrayList<>();
-//        result1 = tree.preOrder(tree.getRoot(),result1);
+        List<Object> result1 = new ArrayList<>();
+        result1 = tree.preOrder(tree.getRoot(),result1);
 //        result1 = tree.inOrder(tree.getRoot(), result1);
-//        System.out.println(result1);
+        System.out.println(result1);
 //
-        ArrayList<Object> result2 = tree.inOrder(tree.getRoot());
+        List<Object> result2 = tree.inOrder(tree.getRoot());
         System.out.println(result2);
+        System.out.println(result2.size());
+
+        TreeNode root = Tree.reBuildTree(0,result1.size(), 0, result2.size(), result1, result2);
+        System.out.println(root);
+
+//        List<Object> rootRestlt = root.inOrder(root.getRoot());
+//        System.out.println(rootRestlt);
 
 
 
