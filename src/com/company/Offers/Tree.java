@@ -10,53 +10,34 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by ÃÍ on 2017/7/17.
+ * Created by ï¿½ï¿½ on 2017/7/17.
  */
 public class Tree {
 
-    /*¸øÇ°Ğò±éÀúĞòÁĞºÍÖĞĞò±éÀúĞòÁĞ£¬ÖØ½¨¶ş²æÊ÷*/
-    public static TreeNode reBuildTree2(List<Object> n1, List<Object> n2) {
-        TreeNode root = new TreeNode();
-        if (n1.size()==0){
-            return root;
-        }
-        root.setVal((int) n1.get(0));
-        int leftLength = n2.indexOf(n1.get(0));
-        System.out.println(leftLength);
-
-        while (root.val!=null){
-            int index_n2 = n2.indexOf(n1.get(0));
-            System.out.println(n1.subList(1, index_n2 + 1));
-            System.out.println(n2.subList(0, index_n2));
-            root.left = reBuildTree2(n1.subList(1, index_n2 + 1), n2.subList(0, index_n2));
-            System.out.println(n1.subList(index_n2 + 1, n1.size()));
-            System.out.println(n2.subList(index_n2 + 1, n2.size()));
-            root.right = reBuildTree2(n1.subList(index_n2 + 1, n1.size()), n2.subList(index_n2 + 1, n2.size()));
-        }
-
-        return root;
-    }
+    /*ç»™å‰åºéå†åºåˆ—å’Œä¸­åºéå†åºåˆ—ï¼Œé‡å»ºäºŒå‰æ ‘*/
 
     public static TreeNode reBuildTree(int startPreorder, int endPreorder, int startInorder, int endInorder,
                                        List<Object> preorder, List<Object> inorder) throws Exception {
+
         if (preorder.size()==0&&inorder.size()==0)
             return null;
-        //Ç°Ğò±éÀúĞòÁĞµÚÒ»¸öÊı×ÖÊÇ¸ù½ÚµãµÄÖµ
-        Object rootValue = preorder.get(0);
-        TreeNode root = new TreeNode();
-        root.setVal((int)rootValue);
-        root.setLeft(null);
-        root.setRight(null);
+        System.out.println("["+startPreorder+" - "+endPreorder+"]"+"  "+"["+startInorder+" - "+endInorder+"]");
+        //å‰åºéå†åºåˆ—ç¬¬ä¸€ä¸ªæ•°å­—æ˜¯æ ¹èŠ‚ç‚¹çš„å€¼
+        Object rootValue = preorder.get(startPreorder);
+        TreeNode root = new TreeNode(rootValue);
+//        root.setVal((int)rootValue);
+//        root.setLeft(null);
+//        root.setRight(null);
 
         if (startPreorder == endPreorder){
-            //µ±preorderºÍinorder¶¼Ö»ÓĞÒ»¸öÔªËØ£¬²¢ÇÒÏàµÈÊ±£¬·µ»Ø
+            //å½“preorderå’Œinorderéƒ½åªæœ‰ä¸€ä¸ªå…ƒç´ ï¼Œå¹¶ä¸”ç›¸ç­‰æ—¶ï¼Œè¿”å›
             if ((startInorder == endInorder)&&(preorder.get(startPreorder)==inorder.get(startInorder)))
                 return root;
             else
                 throw new Exception("Invalid input!");
         }
 
-        //ÔÚÖĞĞò±éÀúÖĞÕÒµ½¸ù½ÚµãµÄÖµ
+        //åœ¨ä¸­åºéå†ä¸­æ‰¾åˆ°æ ¹èŠ‚ç‚¹çš„å€¼
         int rootInorder = inorder.indexOf(rootValue);
 
         if (rootInorder==endInorder&&inorder.get(rootInorder)!=rootValue)
@@ -65,16 +46,73 @@ public class Tree {
         int leftLength = rootInorder - startInorder;
         int leftPreorderEnd = startPreorder + leftLength;
 
-        //¹¹½¨×ó×ÓÊ÷
+        //æ„å»ºå·¦å­æ ‘
         if (leftLength>0) {
-            root.left = reBuildTree(startPreorder+1, leftPreorderEnd, startInorder, rootInorder-1, preorder, inorder);
+            root.left = reBuildTree(startPreorder + 1, leftPreorderEnd, startInorder, rootInorder - 1, preorder, inorder);
         }
-
         if(leftLength < endPreorder - startPreorder) {
             root.right = reBuildTree(leftPreorderEnd + 1, endPreorder, rootInorder + 1, endInorder, preorder, inorder);
         }
         return root;
+    }
 
+
+    public static TreeNode reBuildTree3(List<Object> preorder, List<Object> inorder) throws Exception {
+
+        if (preorder.size()==0&&inorder.size()==0)
+            return null;
+
+        int startPreorder = 0;
+        int endPreorder = preorder.size()-1;
+        int startInorder = 0;
+        int endInorder = inorder.size()-1;
+//        System.out.println(preorder);
+//        System.out.println(inorder);
+//        System.out.println("["+startPreorder+" - "+endPreorder+"]"+"  "+"["+startInorder+" - "+endInorder+"]");
+        //å‰åºéå†åºåˆ—ç¬¬ä¸€ä¸ªæ•°å­—æ˜¯æ ¹èŠ‚ç‚¹çš„å€¼
+        Object rootValue = preorder.get(startPreorder);
+        TreeNode root = new TreeNode(rootValue);
+        root.setLeft(null);
+        root.setRight(null);
+
+        if (startPreorder == endPreorder){
+            //å½“preorderå’Œinorderéƒ½åªæœ‰ä¸€ä¸ªå…ƒç´ ï¼Œå¹¶ä¸”ç›¸ç­‰æ—¶ï¼Œè¿”å›
+            if ((startInorder == endInorder)&&(preorder.get(startPreorder)==inorder.get(startInorder))) {
+                return root;
+            }else
+                throw new Exception("Invalid input!");
+        }
+
+        //åœ¨ä¸­åºéå†ä¸­æ‰¾åˆ°æ ¹èŠ‚ç‚¹çš„å€¼
+        int rootInorder = inorder.indexOf(rootValue);
+
+        if (rootInorder==endInorder&&inorder.get(rootInorder)!=rootValue)
+            throw new Exception("Invalid input!");
+
+        int leftLength = rootInorder - startInorder;
+        int leftPreorderEnd = startPreorder + leftLength;
+
+        //æ„å»ºå·¦å­æ ‘
+        if (leftLength>0) {
+            /*
+            * åŸæ¥è¿™è¾¹æ˜¯ï¼špreorder = preorder.subList(startPreorder + 1, leftPreorderEnd+1);
+            * subList()è¿™ä¸ªæ–¹æ³•æˆªå–Listçš„åŒæ—¶ä¹Ÿæ”¹å˜äº†æ¥æ—¶listï¼Œæ‰€ä»¥éœ€è¦æ–°å»ºä¸€ä¸ªListåœ¨ä¼ å…¥åˆ°é€’å½’å‡½æ•°ä¸­ã€‚            *
+            * */
+            List<Object> preorder1 = preorder.subList(startPreorder + 1, leftPreorderEnd+1);
+            List<Object> inorder1 = inorder.subList(startInorder, rootInorder);
+            root.left = reBuildTree3(preorder1, inorder1);
+        }
+        if(leftLength < endPreorder - startPreorder) {
+            List<Object> preorder2 = preorder.subList(leftPreorderEnd + 1, endPreorder+1);
+            List<Object> inorder2 = inorder.subList(rootInorder + 1, endInorder+1);
+
+            root.right = reBuildTree3(preorder2, inorder2);
+        }
+        return root;
+    }
+
+    public static TreeNode GetNext(TreeNode pNode) {
+        return new TreeNode();
     }
 
     public static void main(String[] args) {

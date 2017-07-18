@@ -17,6 +17,7 @@ public class TreeNode {
     public TreeNode right;
     public ArrayList<TreeNode> nodes = new ArrayList<>();
     public TreeNode root;
+    public TreeNode parent;
 
     public TreeNode() {
     }
@@ -58,7 +59,7 @@ public class TreeNode {
         return root;
     }
 
-    /*����������������һ��Object����null�����֧Ϊ��*/
+    /*create a binary tree, the input is Object list, which can contain null values*/
     public TreeNode createTree(Object[] vals) {
         for (Object obj:vals){
             if (obj!=null)
@@ -66,12 +67,12 @@ public class TreeNode {
             else
                 nodes.add(null);
         }
-        // ��ǰlastParentIndex-1�����ڵ㰴�ո��ڵ��뺢�ӽڵ�����ֹ�ϵ����������
+        // the last Parent may have no right child ,so process the former lastParent-1 parents firstly.
         for (int i=0;i<nodes.size()/2-1;i++){
             nodes.get(i).left = nodes.get(i*2+1);
             nodes.get(i).right = nodes.get(i*2+2);
         }
-        //���һ��parent����û��right����������
+        //process the last parent separately.
         int lastParentIndex = nodes.size()/2-1;
         nodes.get(lastParentIndex).left = nodes.get(lastParentIndex * 2 + 1);
         if(nodes.size()%2!=0)
@@ -90,7 +91,7 @@ public class TreeNode {
         return (height1 > height2)?height1+1:height2+1;
     }
 
-    /*�ݹ鷨 ǰ�����������*/
+    /* preorder on binary tree, using recursive way*/
     public List<Object> preOrder(TreeNode root,List<Object> result){
         if (root==null){
             return result;
@@ -102,8 +103,7 @@ public class TreeNode {
     }
 
 
-    /*������ ǰ�����������
-    *
+    /*preorder on binary tree , using circulate way
     * */
     public ArrayList<Object> preOrder(TreeNode root) {
         Stack<TreeNode> stack = new Stack<>();
@@ -125,7 +125,7 @@ public class TreeNode {
         return result;
     }
 
-    /*�ݹ飬�������*/
+    /*inorder on binary tree, using recursive way*/
     public ArrayList<Object> inOrder(TreeNode root,ArrayList<Object> result){
         if (root == null)
             return result;
@@ -135,7 +135,7 @@ public class TreeNode {
         return result;
     }
 
-    /*�������������*/
+    /*inorder on binary tree, using circulate way*/
     public List<Object> inOrder(TreeNode root){
         Stack<TreeNode> stack = new Stack<>();
         List<Object> result = new ArrayList<>();
@@ -163,28 +163,19 @@ public class TreeNode {
         result1 = tree.preOrder(tree.getRoot(),result1);
 //        result1 = tree.inOrder(tree.getRoot(), result1);
         System.out.println(result1);
+
+
 //
         List<Object> result2 = tree.inOrder(tree.getRoot());
         System.out.println(result2);
-        System.out.println(result2.size());
-
-        TreeNode root = Tree.reBuildTree(0,result1.size(), 0, result2.size(), result1, result2);
-        System.out.println(root);
-
-//        List<Object> rootRestlt = root.inOrder(root.getRoot());
+//
+//        TreeNode root = Tree.reBuildTree3(result1, result2);
+//
+//        assert root != null;
+//        List<Object> rootRestlt = root.inOrder(root);
 //        System.out.println(rootRestlt);
 
 
-
-
-//        System.out.println(tree.nodes.get(0).left.val);
-//        System.out.println(tree.nodes.get(0).right.val);
-//        System.out.println(tree.getTreeHeight(tree.nodes.get(0)));
-//        System.out.println(Math.ceil(Math.log(tree.getTreeHeight(tree.nodes.get(0)))/Math.log(2)));
-//
-//
-//        System.out.println("/");
-//        System.out.println("\\");
     }
 
 }
