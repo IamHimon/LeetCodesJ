@@ -115,6 +115,15 @@ public class Tree {
         return new TreeNode();
     }
 
+    public static TreeNode buildParent1(TreeNode root) {
+        if (root!=null){
+            root.parent = buildParent1(root.left);
+            root.parent = buildParent1(root.right);
+//            System.out.println(root.val);
+        }
+        return root;
+    }
+
     public static void main(String[] args) {
 
     }
