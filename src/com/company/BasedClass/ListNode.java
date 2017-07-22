@@ -19,11 +19,6 @@ public class ListNode {
     }
     public static ListNode buildListNode(Object[] obj){
         ListNode head = new ListNode();
-//        ListNode pNode = head;
-//        for (int i=1;i<obj.length;i++){
-//            pNode.next = new ListNode(obj[i]);
-//            pNode.next = pNode;
-//        }
         for (Object o:obj) {
             addToTail(head, o);
         }
