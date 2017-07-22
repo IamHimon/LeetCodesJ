@@ -1,11 +1,10 @@
 package com.company.BasedClass;
 
-import com.company.Offers.Tree;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Stack;
+
+import static com.company.Offers.Chapter2.Tree.GetNext;
 
 
 /**
@@ -250,12 +249,13 @@ public class TreeNode {
         buildParent(tree.getRoot());
 
 
-        for (TreeNode node:tree.nodes){
-            if (node!=null&&node.parent!=null)
-                System.out.println(node.parent.val);
-        }
+//        for (TreeNode node:tree.nodes){
+//            if (node!=null&&node.parent!=null)
+//                System.out.println(node.parent.val);
+//        }
 
-
+        System.out.println(tree.nodes.get(3).val);
+        System.out.println(GetNext(tree.nodes.get(3)).val);
 
 
 /*        List<Object> result1 = new ArrayList<>();

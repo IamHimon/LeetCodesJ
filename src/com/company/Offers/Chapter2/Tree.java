@@ -1,13 +1,8 @@
-package com.company.Offers;
+package com.company.Offers.Chapter2;
 
 import com.company.BasedClass.TreeNode;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
-import javax.swing.plaf.PanelUI;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by �� on 2017/7/17.
@@ -111,20 +106,38 @@ public class Tree {
         return root;
     }
 
+
+    /*
+    * 给定一个节点pNode，找出它在二叉树中序遍历的下一个节点：
+    * 1.如果pNode有右子树，则右子树的最左子节点就是nNext
+    * 2.如果pNode没有右子树，
+    *   （1）如果是父节点的左孩子，则下一个节点就是他的父节点就是nNext
+    *   （2）如果是父节点的右孩子，则上溯它所有的父节点，直达找到一个是他父节点左孩子的那个节点，则他的父节点就是下一个节点nNext
+    * */
     public static TreeNode GetNext(TreeNode pNode) {
-        return new TreeNode();
-    }
-
-    public static TreeNode buildParent1(TreeNode root) {
-        if (root!=null){
-            root.parent = buildParent1(root.left);
-            root.parent = buildParent1(root.right);
-//            System.out.println(root.val);
+        if (pNode == null)
+            return null;
+        TreeNode pNext = new TreeNode();
+        if (pNode.right != null) {
+            TreeNode pRight = pNode.right;
+            while (pRight.left != null) {
+                pRight = pRight.left;
+            }
+            pNext = pRight;
+        } else if (pNode.parent!=null) {
+            TreeNode pCurrent = pNode;
+            TreeNode pParent = pNode.parent;
+            while (pParent!=null&&pCurrent==pParent.right){
+                pCurrent = pParent;
+                pParent = pParent.parent;
+            }
+            pNext = pParent;
         }
-        return root;
+        return pNext;
     }
 
-    public static void main(String[] args) {
+
+    public static void main(String_p[] args) {
 
     }
 }
