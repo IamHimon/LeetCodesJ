@@ -2,50 +2,71 @@ package com.company;
 
 import com.company.Offers.Chapter2.Array;
 import com.company.Offers.Chapter2.String_p;
+import javafx.scene.layout.BackgroundRepeat;
 
 import java.util.Arrays;
 
 /**
- * Created by ÃÍ on 2017/7/22.
+ * Created by çŒ› on 2017/7/22.
  */
 public class JSort {
 
-    /*¿ìËÙÅÅĞò(ÉıĞò)*/
-    public static void quickSort(int[] A, int low, int high){
-        if (low >= high)//½áÊøÌõ¼ş
+    /*
+    * æ’å…¥æ’åºï¼Œç›´æ¥æ’å…¥æ’åº
+    * */
+    public static void insertSort(int[] A) {
+        int guard;
+        for (int i = 1; i < A.length; i++) {
+            guard = A[i];
+            int j = i - 1;
+            while (j >= 0 && A[j] > guard) {
+                A[j + 1] = A[j];
+                j--;
+            }
+            A[j + 1] = guard;
+        }
+    }
+
+
+    /*å¿«é€Ÿæ’åº(å‡åº)ï¼Œæ¯ä¸€é€‰æ‹©ä¸€ä¸ªkey(ä¸€èˆ¬æ˜¯ç¬¬ä¸€ä¸ª),ç„¶åæ¯ä¸€æ¬¡å¾ªç¯æ ¹æ®keyå€¼æŠŠæ•°ç»„åˆ’åˆ†ä¸ºä¸¤éƒ¨åˆ†ï¼Œå·¦è¾¹å°äºkeyï¼Œå³è¾¹å¤§äºkeyï¼Œ
+    * ç»“æŸæ¡ä»¶low>=high
+    * */
+    public static void quickSort(int[] A, int low, int high) {
+        if (low >= high)//ç»“æŸæ¡ä»¶
             return;
         int i = low;
         int j = high;
-        int key = A[i]; //Ò»°ãµÚÒ»¸ö×÷Îªkey
+        int key = A[i]; //ä¸€èˆ¬ç¬¬ä¸€ä¸ªä½œä¸ºkey
         int temp;
-        while (i<j){
-            while (i<j && A[j] > key){ //´Ó´óµ½Ğ¡£¬ÕÒµ½±ÈkeyĞ¡µÄÏÂ±êj
+        while (i < j) {
+            while (i < j && A[j] > key) { //ä»å¤§åˆ°å°ï¼Œæ‰¾åˆ°æ¯”keyå°çš„ä¸‹æ ‡j
                 j -= 1;
             }
-            temp = A[i];    //½»»»A[j]ÓëA[i]
+            temp = A[i];    //äº¤æ¢A[j]ä¸A[i]
             A[i] = A[j];
-            A[j] = temp;    //´ËÊ±key´æÔÚA[j]Î»ÖÃ
-            while (i<j && A[i] <= key) {    //ÔÙ´ÓĞ¡µ½´ó£¬ÕÒµ½±Èkey´óµÄÏÂ±êi
+            A[j] = temp;    //æ­¤æ—¶keyå­˜åœ¨A[j]ä½ç½®
+            while (i < j && A[i] <= key) {    //å†ä»å°åˆ°å¤§ï¼Œæ‰¾åˆ°æ¯”keyå¤§çš„ä¸‹æ ‡i
                 i += 1;
             }
-            temp = A[j];    //½»»»A[i]ÓëA[j]
+            temp = A[j];    //äº¤æ¢A[i]ä¸A[j]
             A[j] = A[i];
-            A[i] = temp;    //´ËÊ±key´æÔÚA[i]Î»ÖÃ
+            A[i] = temp;    //æ­¤æ—¶keyå­˜åœ¨A[i]ä½ç½®
         }
-        quickSort(A, low, high - 1); //ÔÚkeyÓÒ±ßÔÙ½øĞĞ
-        quickSort(A, low+1, high); //ÔÚkey×ó±ßÔÙ½øĞĞ
+        quickSort(A, low, high - 1); //åœ¨keyå³è¾¹å†è¿›è¡Œ
+        quickSort(A, low + 1, high); //åœ¨keyå·¦è¾¹å†è¿›è¡Œ
     }
 
-    /*¸øÔ±¹¤ÄêÁäÅÅĞò£¬¹æ¶¨Ô±¹¤ÄêÁäµÄ·¶Î§ÊÇ0-99
-    *ÏÈ³õÊ¼»¯timeOfAges[]¶¼Îª0,È»ºó¸ù¾İÊäÈëagesÀ´¹¹ÔìËü£¬ÄêÁä³öÏÖÁË¶àÉÙ´Î¾ÍÔÚagesÀïÃæÉèÖÃ¼¸´Î¸ÃÄêÁä
+
+    /*ç»™å‘˜å·¥å¹´é¾„æ’åºï¼Œè§„å®šå‘˜å·¥å¹´é¾„çš„èŒƒå›´æ˜¯0-99
+    *å…ˆåˆå§‹åŒ–timeOfAges[]éƒ½ä¸º0,ç„¶åæ ¹æ®è¾“å…¥agesæ¥æ„é€ å®ƒï¼Œå¹´é¾„å‡ºç°äº†å¤šå°‘æ¬¡å°±åœ¨agesé‡Œé¢è®¾ç½®å‡ æ¬¡è¯¥å¹´é¾„
     *
     * */
     public static void SortAge(int ages[]) throws Exception {
-        if (ages.length<=0)
+        if (ages.length <= 0)
             return;
 
         int oldestAge = 99;
-        int[] timeOfAge = new int[oldestAge + 1]; //¸÷ÄêÁä³öÏÖµÄ´ÎÊı
+        int[] timeOfAge = new int[oldestAge + 1]; //å„å¹´é¾„å‡ºç°çš„æ¬¡æ•°
 
         for (int age : ages) {
             if (age < 0 && age > oldestAge)
@@ -54,13 +75,13 @@ public class JSort {
         }
 //        System.out.println(Arrays.toString(timeOfAge));
 
-        /*indexÊÇagesÊı×éµÄÏÂ±ê£¬À´ÖØĞÂ¸øagesÊı×é¸³Öµ
-        * ´Ó0-99Ëê¿ªÊ¼±éÀú£¬ÔÚiËê¸ù¾İtimeOfAge[i]µÄÖµ£¬Èç¹û´óÓÚÁã£¬ËµÃ÷ÓĞÕâ¸öÄêÁä³öÏÖ£¬È»ºó²Å½øÈëµÚ¶ş²ãforÑ­»·£¬Ö»ÓĞµ±½øÀ´µÚ¶ş²ãfor²ÅÄÜ¸øindexÔö1
-        * ÔÚµÚ¶ş²ãforÑ­»·ÖĞÀ´¸øagesÊı×é¸³Öµ£¬ÇÒ¸³µÄÖµÎªi£¬ÒòÎªiÊÇ´ÓĞ¡µ½´ó£¨0-99£©µÄ£¬ËùÒÔÒ²¾ÍÏàµ±ÓÚĞ¡µÄÏÈ·Å½øagesÊı×éÀï£¬Ïàµ±ÓÚÅÅĞòÁË¡£
+        /*indexæ˜¯agesæ•°ç»„çš„ä¸‹æ ‡ï¼Œæ¥é‡æ–°ç»™agesæ•°ç»„èµ‹å€¼
+        * ä»0-99å²å¼€å§‹éå†ï¼Œåœ¨iå²æ ¹æ®timeOfAge[i]çš„å€¼ï¼Œå¦‚æœå¤§äºé›¶ï¼Œè¯´æ˜æœ‰è¿™ä¸ªå¹´é¾„å‡ºç°ï¼Œç„¶åæ‰è¿›å…¥ç¬¬äºŒå±‚forå¾ªç¯ï¼Œåªæœ‰å½“è¿›æ¥ç¬¬äºŒå±‚foræ‰èƒ½ç»™indexå¢1
+        * åœ¨ç¬¬äºŒå±‚forå¾ªç¯ä¸­æ¥ç»™agesæ•°ç»„èµ‹å€¼ï¼Œä¸”èµ‹çš„å€¼ä¸ºiï¼Œå› ä¸ºiæ˜¯ä»å°åˆ°å¤§ï¼ˆ0-99ï¼‰çš„ï¼Œæ‰€ä»¥ä¹Ÿå°±ç›¸å½“äºå°çš„å…ˆæ”¾è¿›agesæ•°ç»„é‡Œï¼Œç›¸å½“äºæ’åºäº†ã€‚
         * */
         int index = 0;
-        for (int i=0;i<oldestAge;i++){
-            for (int j=0;j<timeOfAge[i];j++){
+        for (int i = 0; i < oldestAge; i++) {
+            for (int j = 0; j < timeOfAge[i]; j++) {
                 ages[index] = i;
                 index++;
             }
@@ -69,10 +90,17 @@ public class JSort {
 
     }
 
+    public static void hello() {
+        System.out.println("hello");
+    }
+
     public static void main(String[] args) throws Exception {
-        int[] a = {57, 14,68, 59, 52, 72, 28, 96, 33, 24};
+        int[] a = {57, 14, 68, 59, 52, 72, 28, 96, 33, 24};
 //        quickSort(a, 0, a.length-1);
-//        System.out.println(Arrays.toString(a));
-        SortAge(a);
+//        SortAge(a);
+        insertSort(a);
+        System.out.println(Arrays.toString(a));
+        System.out.println(Math.sqrt(178 * 2));
+        System.out.println(10318/((187+2)*2));
     }
 }

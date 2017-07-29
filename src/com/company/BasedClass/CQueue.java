@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.Stack;
 
 /**
- * Created by ÃÍ on 2017/7/22.
+ * Created by ï¿½ï¿½ on 2017/7/22.
  */
 public class CQueue {
     private Stack<Object> stack1;
