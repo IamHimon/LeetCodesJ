@@ -111,6 +111,5 @@ public class ListNode {
         deleteDuplication(h2);
         printListNode(h2);
 
-
     }
 }
