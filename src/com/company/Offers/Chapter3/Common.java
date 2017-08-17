@@ -1,6 +1,13 @@
 package com.company.Offers.Chapter3;
 
+import com.company.BasedClass.ListNode;
+import com.company.BasedClass.TreeNode;
+
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.company.BasedClass.ListNode.buildListNode;
 
 public class Common {
     /*面试题16,求c中的power(base,exponent)求base的exponent次方函数java实现，
@@ -134,93 +141,89 @@ public class Common {
         }
     }
 
+    /*面试题20*/
+    static int s = 0;
 
-    /*面试题19*/
-    private static boolean match(String str, String pattern) {
-        if (str.isEmpty() && pattern.isEmpty())
+    private static boolean isNumeric(String string) {
+        if (string.isEmpty())
             return false;
+        char[] str = string.toCharArray();
+        boolean numeric = scanInteger(str);
+        if (s < str.length && str[s] == '.') {
+            s++;
+            numeric = scanUnsignedInteger(str) || numeric;
+        }
+        if (s < str.length && (str[s] == 'e' || str[s] == 'E')) {
+            s++;
+            numeric = numeric && scanInteger(str);
+        }
 
-        char[] Str = str.toCharArray();
-        char[] Pattern = pattern.toCharArray();
-
-        if (Str.length > Pattern.length)
-            return false;
-
-        int s = 0, p = 0;
-
-
-        return matchCore(Str, s, Pattern, p);
+        return numeric && (s == str.length);
     }
 
-    static private boolean matchCore(char[] str, int s, char[] pattern, int p) {
-        if (s == str.length && p == pattern.length) {
-            return true;
-        }
-        if (s < str.length && p == pattern.length)
-            return false;
+    private static boolean scanInteger(char[] str) {
+        if (str[s] == '+' || str[s] == '-')
+            s++;
+        return scanUnsignedInteger(str);
+    }
 
-        if (p + 1 < pattern.length && pattern[p + 1] == '*') {
-            if (str[s] == pattern[p] || (pattern[p] == '.' && s < str.length)) {
-                return matchCore(str, s + 1, pattern, p + 2) ||
-                        matchCore(str, s + 1, pattern, p) ||
-                        matchCore(str, s, pattern, p + 2);
+    private static boolean scanUnsignedInteger(char[] str) {
+        int numEnd = s;
+        while (s < str.length && str[s] >= '0' && str[s] <= '9')
+            s++;
+        return numEnd < s;
+    }
+
+    /*面试题21,调整整数数组,奇数在前,偶数在后*/
+    private static int[] reorderOddEven(int[] nums) throws Exception {
+        if (nums.length == 0)
+            throw new Exception("null arrays");
+
+        int head = 0, tail = nums.length - 1;
+        int temp;
+        while (head <= tail) {
+            if (((nums[head] & 1) == 1) && ((nums[tail] & 1) == 1)) { //都为奇数
+                head++;
+            } else if (((nums[head] & 1) == 0) && ((nums[tail] & 1) == 0)) {
+                tail--;
+            } else if (((nums[head] & 1) == 0) && ((nums[tail] & 1) == 1)) {
+                temp = nums[head];
+                nums[head] = nums[tail];
+                nums[tail] = temp;
+                head++;
+                tail--;
             } else {
-                return matchCore(str, s, pattern, p + 2);
+                head++;
+                tail--;
             }
         }
 
-        if (str[s] == pattern[p] || (pattern[p] == '.' && s < str.length)) {
-            return matchCore(str, s + 1, pattern, p + 1);
+        return nums;
+    }
+
+    /*面试提22, 链表中倒数地k个节点,
+    * 两个指针,头指针先走到k-1个节点,然后尾指针开始一起走,当头指针走到链表结尾,此时尾指针所在的节点就是倒数第k个
+    * */
+    private static ListNode findKthToTail(ListNode head, int k) {
+        if (head==null||k==0)
+            return null;
+        ListNode pHead = head;
+        ListNode pBehind = head;
+
+        for (int i=0;i<k-1;i++){
+            if (pHead.next!=null)
+                pHead = pHead.next;
+            else
+                return null;
         }
 
-        return false;
-    }
-
-    /*面试题20,判断输入的字符串是否表示数值，包括整数和小树*/
-    private static boolean isNum(String str) {
-
-        String newStr = str.trim();
-        char[] Str = newStr.toCharArray();
-        if (Str.length == 0 )
-            return false;
-        //开头只能是'+','-',数字
-        if (Str[0]=='.'||Str[0]=='+'||Str[0]=='-'||(Str[0]<='9'&&Str[0]>='0'))
-            return isNumCore(Str, 0);
-        else
-            return false;
-    }
-
-    private static boolean isNumCore(char[] str, int s) {
-        boolean isAllNum;
-        if (s == str.length)
-            return true;
-        //当前字符是'+'或者'-',下一个字符只能是数字
-        if (s + 1 < str.length && (str[s] == '+' || str[s] == '-') && (str[s + 1] <= '9' && str[s + 1] >= '0'))
-            return isNumCore(str, s + 1);
-
-        //当前字符是'.'，下个字符只能是数字或者空白
-        if (str[s] == '.' && (s + 1 < str.length && (str[s + 1] <= '9' && str[s + 1] >= '0'))||(s+1==str.length))
-            return isNumCore(str, s + 1);
-
-        //当前字符是'e',后面所有字符，一直到结尾只能是数字或者后面一个字符是'+','-'
-        if (s+1<str.length && str[s] == 'e') {
-            isAllNum = true;
-            for (int i = s+1; i < str.length; i++) {
-                if (str[i] > '9' || str[i] < '0') {
-                    isAllNum = false;
-                    break;
-                }
-            }
-            return isAllNum;
+        while (pHead.next!=null){
+            pHead = pHead.next;
+            pBehind = pBehind.next;
         }
-        //当前字符是数字,下个字符只能是数字,'.','e'
 
-        if (str[s]>='0'&&str[s]<='9')
-            return isNumCore(str, s + 1);
-
-        return false;
+        return pBehind;
     }
-    /*可能遵循的模式：A[.[B]][e|EC]或者.B[e|EC],其中A,C都是整数部分可能是负数，B是无符号整数*/
 
 
     public static void main(String[] args) throws Exception {
@@ -230,9 +233,16 @@ public class Common {
 //        System.out.println('9'-'0');
 //        PrintNumber(new char[]{'0','1','2'});
 //        PrintToMaxOfNDigits2(2);
-//        System.out.println(match("aba", "a*a"));
-        System.out.println(isNum("."));
-//        System.out.println(Double.parseDouble(".1"));
+
+//        System.out.println(isNumeric("e"));
+//        int[] nums = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
+//        System.out.println(Arrays.toString(reorderOddEven(nums)));
+//        System.out.println(nums[0]&1);
+//        System.out.println(nums[1]&1);
+
+        Object[] obj = {1, 2, 3, 4, 5, 6, 7, 8};
+        ListNode h2 = buildListNode(obj);
+        System.out.println(findKthToTail(h2, 1).value);
 
 
     }

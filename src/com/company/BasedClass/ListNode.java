@@ -9,7 +9,7 @@ import java.util.Objects;
  */
 public class ListNode {
     public Object value=null;
-    protected ListNode next=null;
+    public ListNode next=null;
 
     public ListNode() {
     }
@@ -108,7 +108,7 @@ public class ListNode {
 
         ListNode h2 = buildListNode(obj);
 //        DeleteNode(h2, h2.next.next);
-        deleteDuplication(h2);
+//        deleteDuplication(h2);
         printListNode(h2);
 
     }
