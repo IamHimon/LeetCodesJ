@@ -11,8 +11,6 @@ public class ListNode {
     public Object value=null;
     public ListNode next=null;
 
-    public ListNode() {
-    }
 
     public ListNode(Object value) {
         this.value = value;
@@ -102,8 +100,8 @@ public class ListNode {
 
     public static void main(String[] args) throws Throwable {
 //        Object[] obj = {1,1,2,3,3,5,6,7,7,8,8};
-//        Object[] obj = {1,2,3,5,6,7,8};
-        Object[] obj = {1, 1,1,1,1};
+        Object[] obj = {1,2,3,5,6,7,8};
+//        Object[] obj = {1, 1,1,1,1};
 
 
         ListNode h2 = buildListNode(obj);
