@@ -98,7 +98,7 @@ public class TreeNode {
     }
 
 
-    public int getTreeHeight(TreeNode node){
+    public static int getTreeHeight(TreeNode node){
         int height1;
         int height2;
         if (node==null)
@@ -109,8 +109,9 @@ public class TreeNode {
     }
 
     /* preorder on binary tree, using recursive way*/
-    public List<Object> preOrder(TreeNode root,List<Object> result){
+    public static List<Object> preOrder(TreeNode root,List<Object> result){
         if (root==null){
+            result.add(null);
             return result;
         }
         result.add(root.val);
@@ -171,6 +172,7 @@ public class TreeNode {
         return result;
     }
 
+    //后序遍历
     public List<Object> postOrder(TreeNode root, List<Object> result){
         if (root==null){
             return result;
@@ -180,6 +182,8 @@ public class TreeNode {
         result.add(root.val);
         return result;
     }
+
+    //层次遍历
 
     /*构造父节点指针
     * 思路：给节点赋一个属性：sign表示有没有给他安排过parent，
@@ -240,13 +244,36 @@ public class TreeNode {
         return root;
     }
 
+    public static void printTree(TreeNode treeNode){
+        if (treeNode == null)
+            return;
+        for(int i=0;i<=getTreeHeight(treeNode);i++){
+            printLevel(treeNode, i);
+            System.out.println();
+
+        }
+    }
+
+    private static void printLevel(TreeNode root, int level){
+        if (root == null || level<1)
+            return ;
+        if (level == 1){
+            System.out.print(root.val + " ");
+            return ;
+        }
+        printLevel(root.left, level - 1);
+        printLevel(root.right, level - 1);
+    }
+
+
 
 
     public static void main(String[] args) throws Exception {
-        Object[] vals = new Object[]{1, 2, 3, 4, 5, 6, 7};
+        Object[] vals = new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         TreeNode tree = new TreeNode().createTree(vals);
+        System.out.println(tree.getRoot());
 
-        buildParent(tree.getRoot());
+//        buildParent(tree.getRoot());
 
 
 //        for (TreeNode node:tree.nodes){
@@ -254,8 +281,8 @@ public class TreeNode {
 //                System.out.println(node.parent.val);
 //        }
 
-        System.out.println(tree.nodes.get(3).val);
-        System.out.println(GetNext(tree.nodes.get(3)).val);
+//        System.out.println(tree.nodes.get(3).val);
+//        System.out.println(GetNext(tree.nodes.get(3)).val);
 
 
 /*        List<Object> result1 = new ArrayList<>();

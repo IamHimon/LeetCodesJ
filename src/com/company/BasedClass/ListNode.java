@@ -46,7 +46,7 @@ public class ListNode {
 //        for (ListNode h = head;h!=null;h = h.next)
 //            System.out.println(h.value);
         ListNode pNode = head;
-        while (pNode.next!=null){
+        while (pNode!=null){
             System.out.println(pNode.value);
             pNode = pNode.next;
         }

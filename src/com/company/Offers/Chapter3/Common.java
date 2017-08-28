@@ -6,8 +6,10 @@ import com.company.BasedClass.TreeNode;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static com.company.BasedClass.ListNode.buildListNode;
+import static com.company.BasedClass.ListNode.printListNode;
 
 public class Common {
     /*面试题16,求c中的power(base,exponent)求base的exponent次方函数java实现，
@@ -205,24 +207,190 @@ public class Common {
     * 两个指针,头指针先走到k-1个节点,然后尾指针开始一起走,当头指针走到链表结尾,此时尾指针所在的节点就是倒数第k个
     * */
     private static ListNode findKthToTail(ListNode head, int k) {
-        if (head==null||k==0)
+        if (head == null || k == 0)
             return null;
         ListNode pHead = head;
         ListNode pBehind = head;
 
-        for (int i=0;i<k-1;i++){
-            if (pHead.next!=null)
+        for (int i = 0; i < k - 1; i++) {
+            if (pHead.next != null)
                 pHead = pHead.next;
             else
                 return null;
         }
 
-        while (pHead.next!=null){
+        while (pHead.next != null) {
             pHead = pHead.next;
             pBehind = pBehind.next;
         }
 
         return pBehind;
+    }
+
+    /*面试题23,链表中环的入口节点*/
+    private static ListNode meetingNode(ListNode head) {
+        if (head == null)
+            return null;
+        ListNode p1 = head.next;
+        if (p1 == null)
+            return null;
+        ListNode p2 = p1.next;
+        while (p2 != null && p1 != null) {
+            if (p2 == p1) {
+                return p2;
+            }
+            p1 = p1.next;
+            p2 = p2.next;
+            if (p2 != null)
+                p2 = p2.next;
+        }
+        return null;
+    }
+
+    private static ListNode entryNodeOfFloop(ListNode head) {
+        ListNode nodeInLoop = meetingNode(head);
+        if (nodeInLoop == null)
+            return null;
+
+        //获得环中节点个数
+        int loopNodes_count = 1;
+        ListNode temp = nodeInLoop;
+        while (temp.next != nodeInLoop) {
+            temp = temp.next;
+            loopNodes_count++;
+        }
+
+        //环入口节点
+        ListNode p1 = head;
+        ListNode p2 = head;
+        for (int i = 0; i < loopNodes_count; i++)
+            p1 = p1.next;
+
+        while (p1 != p2) {
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+        return p1;
+    }
+
+    /*面试题24,反转链表*/
+    private static ListNode reverseList(ListNode head) {
+        if (head == null)
+            return null;
+        ListNode p1 = head;
+        ListNode p2 = null;
+        ListNode reversedHead = null;
+        while (p1 != null) {
+            ListNode p1Next = p1.next;
+            //当p1Next为空,说明到结尾了,把头指针赋值给reversedHead,用于返回
+            if (p1Next == null)
+                reversedHead = p1;
+            p1.next = p2;
+            p2 = p1;
+            p1 = p1Next;
+        }
+        return reversedHead;
+    }
+
+    /*面试题25,合并两个递增链表*/
+    private static ListNode Merge_M(ListNode pHead1, ListNode pHead2) throws Exception {
+
+        //judge whether ascending order ListNode
+        ListNode l1 = pHead1;
+        ListNode l2 = pHead2;
+        while (l1.next != null) {
+            int form_value = (int) l1.value;
+            l1 = l1.next;
+            if ((int) l1.value < form_value)
+                throw new Exception("Not ascending order Listnode!");
+        }
+
+        while (l2.next != null) {
+            int form_value = (int) l2.value;
+            l2 = l2.next;
+            if ((int) l2.value < form_value)
+                throw new Exception("Not ascending order Listnode!");
+        }
+
+        ListNode p1 = pHead1;
+        ListNode p2 = pHead2;
+
+        while (p2.next != null) {
+
+            while (p1.next != null) {
+                if ((int) p2.value >= (int) p1.value) {
+                    break;
+                }
+                p1 = p1.next;
+            }
+//            System.out.println(p1.value);
+            ListNode p2Node = p2;
+            ListNode p1Next = p1.next;
+            p1.next = p2Node;
+            p2Node.next = p1Next;
+            p1 = p1Next;
+
+            p2 = p2.next;
+        }
+
+        printListNode(pHead1);
+
+        return pHead1;
+    }
+
+    private static ListNode Merge(ListNode pHead1, ListNode pHead2) {
+        if (pHead1 == null)
+            return pHead2;
+        if (pHead2 == null)
+            return pHead1;
+
+        ListNode pMergeHead;
+        if ((int) pHead1.value < (int) pHead2.value) {
+            pMergeHead = pHead1;
+            pMergeHead.next = Merge(pHead1.next, pHead2);
+        } else {
+            pMergeHead = pHead2;
+            pMergeHead.next = Merge(pHead1, pHead2.next);
+        }
+        return pMergeHead;
+    }
+
+    /*面试题26, 数的子结构*/
+    private static boolean hasSubTree(TreeNode t1, TreeNode t2) {
+        boolean result = false;
+        //如果t1,t2有一个为null,则返回为false;
+        if (t1 != null && t2 != null) {
+            if (t1.val == t2.val){
+                result = DoesTree1HasTree2(t1, t2);
+            }
+            if (!result)
+                result = hasSubTree(t1.left, t2);
+            if (!result)
+                result = hasSubTree(t1.right, t2);
+        }
+        return result;
+    }
+    private static boolean DoesTree1HasTree2(TreeNode tree1, TreeNode tree2){
+        boolean ISHAVE = false;
+        if (tree2 == null)
+            return true;
+        if (tree1 == null)
+            return false;
+        if (tree1.val == tree2.val)
+            ISHAVE = true;
+        ISHAVE = ISHAVE&DoesTree1HasTree2(tree1.left, tree2.left);
+        ISHAVE = ISHAVE&DoesTree1HasTree2(tree1.right, tree2.right);
+        return ISHAVE;
+    }
+    //书上版本
+    private static boolean DoesTree1HasTree2_1(TreeNode tree1, TreeNode tree2){
+        if (tree2 == null)
+            return true;
+        if (tree1 == null)
+            return false;
+        if (tree1.val != tree2.val)
+            return false;
+        return DoesTree1HasTree2_1(tree1.left, tree2.left) && DoesTree1HasTree2_1(tree1.right, tree1.right);
     }
 
 
@@ -240,9 +408,48 @@ public class Common {
 //        System.out.println(nums[0]&1);
 //        System.out.println(nums[1]&1);
 
-        Object[] obj = {1, 2, 3, 4, 5, 6, 7, 8};
-        ListNode h2 = buildListNode(obj);
-        System.out.println(findKthToTail(h2, 1).value);
+
+        //23题测试
+//        ListNode n1 = new ListNode(1);
+//        ListNode n2 = new ListNode(2);
+//        ListNode n3 = new ListNode(3);
+//        ListNode n4 = new ListNode(4);
+//        ListNode n45 = new ListNode(4.5);
+//        ListNode n5 = new ListNode(5);
+//        ListNode n6 = new ListNode(6);
+//        ListNode n7 = new ListNode(7);
+////        ListNode n8 = new ListNode(8);
+//        n1.next = n2;
+//        n2.next = n3;
+//        n3.next = n4;
+//        n4.next = n45;
+//        n45.next = n5;
+//        n5.next = n6;
+//        n6.next = n7;
+////        n7.next = n8;
+//        n6.next = n3;
+////        printListNode(n1);
+//        System.out.println(entryNodeOfFloop(n1).value);*/
+////
+////        Object[] obj1 = {1, 3, 4, 5, 16};
+////        Object[] obj2 = {2, 3, 8, 10};
+////
+////        ListNode h1 = buildListNode(obj1);
+////        ListNode h2 = buildListNode(obj2);
+////        printListNode(h);
+////        printListNode(reverseList(h));
+//
+////        printListNode(Merge(h1, h2));
+        //
+        //面试题26
+        Object[] vals1 = new Object[]{8, 8, 7, 9, 2, null, null, null, null, 4, 7};
+        Object[] vals2 = new Object[]{8, 8, 2};
+        TreeNode tree1 = new TreeNode().createTree(vals1);
+        TreeNode tree2 = new TreeNode().createTree(vals2);
+        tree2.printTree(tree2.getRoot());
+
+//        hasSubTree(tree1.getRoot(), tree2.getRoot());
+//        System.out.println(hasSubTree(tree1.getRoot(), tree2.getRoot()));
 
 
     }
