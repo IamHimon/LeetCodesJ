@@ -223,7 +223,6 @@ public class Common {
             pHead = pHead.next;
             pBehind = pBehind.next;
         }
-
         return pBehind;
     }
 
