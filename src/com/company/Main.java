@@ -9,21 +9,22 @@ import static com.company.Solu.Solution.*;
 public class Main {
 
     public static void main(String[] args) {
-        // write your code here
-//        System.out.println(eight("2147483648"));
-//        System.out.println(eight("18446744073709551617"));
-//        System.out.println(eight_L("18446744073709551617"));
-//        System.out.println(eight_L("+-1234"));
-//        System.out.println(eight("+-1234"));
-//        char a = 1;
-//        System.out.println(nine(1234));
-//        System.out.println(-2147483648);
-//        System.out.println(nine(-2147483648));
-//        System.out.println(nine_L(12321));
-//        System.out.println("hehe");
-//        Object[] vals = new Object[]{1, 2, 3, 4, null, 6, 7};
-//        for (Object o : vals)
-//            System.out.println(o);
+
+/*         write your code here
+        System.out.println(eight("2147483648"));
+        System.out.println(eight("18446744073709551617"));
+        System.out.println(eight_L("18446744073709551617"));
+        System.out.println(eight_L("+-1234"));
+        System.out.println(eight("+-1234"));
+        char a = 1;
+        System.out.println(nine(1234));
+        System.out.println(-2147483648);
+        System.out.println(nine(-2147483648));
+        System.out.println(nine_L(12321));
+        System.out.println("hehe");
+        Object[] vals = new Object[]{1, 2, 3, 4, null, 6, 7};
+        for (Object o : vals)
+            System.out.println(o);
         List<Object> v = new ArrayList<>();
         v.add(1);
         v.add(2);
@@ -35,8 +36,24 @@ public class Main {
         List<Object> v1 = v.subList(1,2);
         System.out.println(v1);
         System.out.println(v);
-//        mergeTrees();
-//        System.out.println(13/2);
-//        System.out.println(14/2);
+        mergeTrees();
+        System.out.println(13/2);
+        System.out.println(14/2);*/
+
+
+//        System.out.println(Integer.parseInt("12"));
+//        System.out.println(Double.parseDouble("12.8"));
+        String string = "sdf";
+        for (char s:string.toCharArray()){
+            if (s<48 || s>58)
+                System.out.println(false);
+
+        }
+        Double b = Double.parseDouble("12.2");
+        if (b - Math.floor(b) < 0.5)
+            System.out.println((int)Math.floor(b));
+        else
+            System.out.println((int)Math.floor(b)+1);
+
     }
 }

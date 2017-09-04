@@ -86,7 +86,6 @@ public class Bag {
                 System.out.println("f[" + i + "][" + j + "]=" + f[i][j]);
             }
         }
-
         return f[N][V];
     }
 
