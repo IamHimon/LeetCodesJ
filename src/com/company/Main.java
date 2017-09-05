@@ -84,7 +84,10 @@ public class Main {
 //        System.out.println(13/2);
 //        System.out.println(14/2);
 
-        System.out.println(meituan_1(5, new int[]{1,2,3,4,5}, 5));
+//        System.out.println(meituan_1(5, new int[]{1,2,3,4,5}, 5));
+
+        System.out.println(2&1);
+        System.out.println(3&1);
     }
 
 

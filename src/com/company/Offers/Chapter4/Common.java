@@ -171,19 +171,19 @@ public class Common {
         Stack<Integer> s2 = new Stack();
         int i = 0; //push_seq
         int p = 0;
-        while (p<pop_seq.length){
+        while (p < pop_seq.length) {
             if (!s1.empty() && s1.peek() == pop_seq[p]) {
                 s2.push(s1.pop());
                 p++;
-            }else if (i<push_seq.length){
-                while (i<push_seq.length && push_seq[i] != pop_seq[p])
+            } else if (i < push_seq.length) {
+                while (i < push_seq.length && push_seq[i] != pop_seq[p])
                     s1.push(push_seq[i++]);
 
-                if (i > push_seq.length-1)
+                if (i > push_seq.length - 1)
                     return false;
                 else
                     s1.push(push_seq[i++]);
-            }else if (s1.peek() != pop_seq[p]){
+            } else if (s1.peek() != pop_seq[p]) {
                 return false;
             }
         }
@@ -191,13 +191,13 @@ public class Common {
     }
 
     /*面试题32,从上到下打印二叉树*/
-    private static void levelPrintTree1(TreeNode root){
+    private static void levelPrintTree1(TreeNode root) {
         if (root == null)
             return;
         Queue<TreeNode> queue = new LinkedList();
         queue.add(root);
         while (!queue.isEmpty()) {
-            System.out.print(queue.peek().val+ " ");
+            System.out.print(queue.peek().val + " ");
             if (queue.peek().left != null) {
                 queue.add(queue.peek().left);
             }
@@ -207,23 +207,24 @@ public class Common {
             queue.remove();
         }
     }
+
     /*面试题32,分行从上向下打印二叉树*/
-    private static void levelPrintTree2(TreeNode root){
+    private static void levelPrintTree2(TreeNode root) {
         if (root == null)
             return;
         Queue<TreeNode> queue = new LinkedList<>();
 
         queue.add(root);
-        int current_floor_count ;
+        int current_floor_count;
         int next_floor_count = 1;
 
-        while (!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             current_floor_count = next_floor_count;
             next_floor_count = 0;
-            for (int i=0;i<current_floor_count;i++){
+            for (int i = 0; i < current_floor_count; i++) {
                 TreeNode cNode = queue.poll();
                 System.out.print(cNode.val + " ");
-                if (cNode.left!=null) {
+                if (cNode.left != null) {
                     queue.add(cNode.left);
                     next_floor_count++;
                 }
@@ -233,18 +234,79 @@ public class Common {
                 }
             }
             System.out.println();
-
         }
-
     }
 
+    /*面试题33,之字打印二叉树*/
+    private static void levelPrintTree3(TreeNode root) {
+        if (root == null)
+            return;
 
+        Stack<TreeNode> s1 = new Stack();
+        Stack<TreeNode> s2 = new Stack();
+        Stack<TreeNode> s3 = new Stack<>();
+
+        TreeNode p = root;
+        int level = 1;
+        s2.push(root);
+        while (!s1.isEmpty() || !s2.isEmpty()) {
+
+            //清空s2,S2付给s1(为了保证顺序,先把s2点保存到一个栈s3中,然后再将s3点放到s1中,这样才能保证s1,s2顺序不变,)
+            while (!s2.isEmpty())
+                s3.push(s2.pop());
+            while (!s3.isEmpty())
+                s1.push(s3.pop());
+
+            while (!s1.isEmpty()) {
+                TreeNode temp = s1.pop();
+                System.out.println(temp.val);
+                if (level % 2 == 0) {
+                    if (temp.right != null)
+                        s2.push(temp.right);
+                    if (temp.left != null)
+                        s2.push(temp.left);
+                } else {
+                    if (temp.left != null)
+                        s2.push(temp.left);
+                    if (temp.right != null)
+                        s2.push(temp.right);
+                }
+            }
+            level++;
+        }
+    }
+
+    /*面试题33,二叉搜索树的后序遍历序列*/
+    private static boolean verifySequenceOfBST(int[] seq, int start, int end) {
+        if (seq.length == 0)
+            return true;
+        boolean right_is = true;
+        int i = start;
+        for (; i < end-1; i++) {
+            if (seq[i] > seq[end-1])
+                break;
+        }
+//        System.out.println(i);
+
+        for (int j = i;j<end-1;j++){
+            if (seq[j] < seq[end-1]){
+                right_is = false;
+                break;
+            }
+        }
+        if (start < i-1)
+            return right_is && verifySequenceOfBST(seq,start, i-1);
+        else if (i<end-1)
+            return right_is && verifySequenceOfBST(seq, i, end-1);
+        else
+            return true;
+    }
 
 
     public static void main(String[] args) {
 //        Object[] vals1 = new Object[]{8, 8, 7, 9, 2, null, null, null, null, 4, 7};
 //        Object[] vals2 = new Object[]{8, 8, 2, 3, 4, 6, 7};
-        Object[] vals2 = new Object[]{8,6,10,5,7,9,11};
+        Object[] vals2 = new Object[]{8, 6, 10, 5, 7, 9, 11};
 //        Object[] vals3 = new Object[]{7, 7, 7, 7, 7, 7, 7};
 //        TreeNode tree1 = new TreeNode().createTree(vals1);
         TreeNode tree2 = new TreeNode().createTree(vals2);
@@ -269,8 +331,11 @@ public class Common {
 //        System.out.println(isPopOrder(push_order, pop_order1));
 
 //        levelPrintTree1(tree2.getRoot());
-        levelPrintTree2(tree2.getRoot());
+//        levelPrintTree3(tree2.getRoot());
 
+
+//        System.out.println(verifySequenceOfBST(new int[]{5, 7, 6, 9, 11, 10, 8}, 0, 7));
+        System.out.println(verifySequenceOfBST(new int[]{7,4,6,5}, 0, 4));
 
     }
 }
