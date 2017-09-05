@@ -28,7 +28,7 @@ public class JSort {
     }
 
 
-    /*快速排序(升序)，每一选择一个key(一般是第一个),然后每一次循环根据key值把数组划分为两部分，左边小于key，右边大于key，
+    /*快速排序(升序)，每一次选择一个key(一般是第一个),然后每一次循环根据key值把数组划分为两部分，左边小于key，右边大于key，
     * 结束条件low>=high
     * */
     public static void quickSort(int[] A, int low, int high) {
@@ -52,8 +52,9 @@ public class JSort {
             A[j] = A[i];
             A[i] = temp;    //此时key存在A[i]位置
         }
-        quickSort(A, low, high - 1); //在key右边再进行
-        quickSort(A, low + 1, high); //在key左边再进行
+
+        quickSort(A, low, i - 1); //在key右边再进行
+        quickSort(A, i + 1, high); //在key左边再进行
     }
 
 
@@ -94,13 +95,65 @@ public class JSort {
         System.out.println("hello");
     }
 
+    /*归并排序*/
+    //合并相邻的两个片段,合并之后是有序的.
+    private static void Merge(int num[], int low, int mid, int high) {
+        int i = low;
+        int j = mid + 1;
+        int t = 0;
+        int[] temp = new int[high - low + 1]; //临时数组用来暂存顺序合并两个片段之后的元素
+        //讲两个片段合并为一个,保持顺序
+        while (i <= mid && j <= high) {
+            if (num[i] <= num[j]) {
+                temp[t++] = num[i];
+                i++;
+            } else {
+                temp[t++] = num[j];
+                j++;
+            }
+        }
+        //当第一个片段[low,mid]还剩下元素
+        while (i <= mid)
+            temp[t++] = num[i++];
+
+        //当第二个片段[mid+1,high]还剩下元素
+        while (j <= high)
+            temp[t++] = num[j++];
+
+        //讲temp数组存入原数组
+        for (int n = low, tt = 0; n <= high; n++, tt++) {
+            num[n] = temp[tt];
+        }
+    }
+    //分解数组,以gap分解,可以分解为len/gap个片段,然后在每两个相邻的连段上做合并(Merge)
+    // ,特殊情况:若子片段个数为奇数,最后一个轮空;若子片段为偶数,high的坐标为length-1
+    public static void MergePass(int num[], int gap) {
+        int i;
+        //归并gap长度的两个相邻片段
+        for (i = 0; i + 2 * gap - 1 < num.length; i = i + 2 * gap)
+            Merge(num, i, i + gap - 1, i + 2 * gap - 1);
+
+        //如果最后的片段不到gap长度
+        if (i + gap -1 < num.length)
+            Merge(num, i, i + gap -1, num.length - 1);
+    }
+
+    private static int[] merge_sort(int num[]){
+        for (int gap=1;gap<num.length;gap = 2*gap){
+            MergePass(num, gap);
+            System.out.println("gap = " + gap + ":\t");
+        }
+        return num;
+    }
+
     public static void main(String[] args) throws Exception {
         int[] a = {57, 14, 68, 59, 52, 72, 28, 96, 33, 24};
-//        quickSort(a, 0, a.length-1);
+//        quickSort(a, 0, a.length - 1);
 //        SortAge(a);
-        insertSort(a);
+//        insertSort(a);
+        merge_sort(a);
         System.out.println(Arrays.toString(a));
-        System.out.println(Math.sqrt(178 * 2));
-        System.out.println(10318/((187+2)*2));
+//        System.out.println(Math.sqrt(178 * 2));
+//        System.out.println(10318/((187+2)*2));
     }
 }

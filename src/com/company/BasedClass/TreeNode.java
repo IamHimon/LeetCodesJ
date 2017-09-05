@@ -250,7 +250,6 @@ public class TreeNode {
         for(int i=0;i<=getTreeHeight(treeNode);i++){
             printLevel(treeNode, i);
             System.out.println();
-
         }
     }
 
@@ -267,11 +266,12 @@ public class TreeNode {
 
 
 
-
     public static void main(String[] args) throws Exception {
         Object[] vals = new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         TreeNode tree = new TreeNode().createTree(vals);
-        System.out.println(tree.getRoot());
+//        System.out.println(tree.getRoot());
+
+        printTree(tree.getRoot());
 
 //        buildParent(tree.getRoot());
 
