@@ -1,6 +1,7 @@
 package com.company.Offers.Chapter4;
 
 import com.company.BasedClass.TreeNode;
+import com.company.Offers.Chapter2.Array;
 import org.omg.CORBA.OBJ_ADAPTER;
 
 import java.util.*;
@@ -282,24 +283,82 @@ public class Common {
             return true;
         boolean right_is = true;
         int i = start;
-        for (; i < end-1; i++) {
-            if (seq[i] > seq[end-1])
+        for (; i < end - 1; i++) {
+            if (seq[i] > seq[end - 1])
                 break;
         }
 //        System.out.println(i);
 
-        for (int j = i;j<end-1;j++){
-            if (seq[j] < seq[end-1]){
+        for (int j = i; j < end - 1; j++) {
+            if (seq[j] < seq[end - 1]) {
                 right_is = false;
                 break;
             }
         }
-        if (start < i-1)
-            return right_is && verifySequenceOfBST(seq,start, i-1);
-        else if (i<end-1)
-            return right_is && verifySequenceOfBST(seq, i, end-1);
+        if (start < i - 1)
+            return right_is && verifySequenceOfBST(seq, start, i - 1);
+        else if (i < end - 1)
+            return right_is && verifySequenceOfBST(seq, i, end - 1);
         else
             return true;
+    }
+
+    /*面试题34,二叉树中和为某一值的路径*/
+    private static boolean findPath(TreeNode root, int value) {
+        if (root == null)
+            return false;
+        ArrayList path = new ArrayList<TreeNode>();
+
+//        Stack<TreeNode> path = new Stack<>();
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode pNode = root;
+        while (!stack.isEmpty() || pNode != null) {
+            if (pNode != null) {
+                path.add(pNode);
+//                System.out.println(pNode.val);
+                stack.push(pNode);
+                if (pNode.right == null && pNode.left == null)
+                    System.out.println(sum(path));
+                pNode = pNode.left;
+
+            } else {
+                pNode = stack.pop();
+                if (!path.isEmpty()&&pNode.right==null)
+                    path.remove(path.size() - 1);
+                pNode = pNode.right;
+            }
+        }
+//        System.out.println(path);
+
+        return true;
+    }
+
+    private static int sum(ArrayList<TreeNode> path) {
+        int sum = 0;
+        for (TreeNode p : path)
+            sum += (Integer)p.val;
+        return sum;
+    }
+
+    private static ArrayList<TreeNode> path = new ArrayList<>();
+    private static void findPath1(TreeNode root, int expectedSum) {
+        if (root == null)
+            return;
+        path.add(root);
+        if (sum(path)==expectedSum&& root.right==null&& root.left==null){
+            System.out.println(sum(path));
+            for (TreeNode t:path)
+                System.out.print(t.val+" ");
+            System.out.println();
+        }
+
+        if (root.left!=null)
+            findPath1(root.left, expectedSum);
+        if (root.right!=null)
+            findPath1(root.right, expectedSum);
+
+        if (!path.isEmpty())
+            path.remove(path.size() - 1);
     }
 
 
@@ -310,6 +369,7 @@ public class Common {
 //        Object[] vals3 = new Object[]{7, 7, 7, 7, 7, 7, 7};
 //        TreeNode tree1 = new TreeNode().createTree(vals1);
         TreeNode tree2 = new TreeNode().createTree(vals2);
+        findPath1(tree2.getRoot(), 21);
 //        TreeNode tree3 = new TreeNode().createTree(vals3);
 
 //        hasSubTree(tree1.getRoot(), tree2.getRoot());
@@ -335,7 +395,7 @@ public class Common {
 
 
 //        System.out.println(verifySequenceOfBST(new int[]{5, 7, 6, 9, 11, 10, 8}, 0, 7));
-        System.out.println(verifySequenceOfBST(new int[]{7,4,6,5}, 0, 4));
+//        System.out.println(verifySequenceOfBST(new int[]{7,4,6,5}, 0, 4));
 
     }
 }

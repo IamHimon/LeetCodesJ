@@ -135,8 +135,8 @@ public class TreeNode {
                 p = p.left;
             }
             if (!stack.empty()){
-                p = stack.peek();  //��ȡ��ǰ�ڵ�
-                stack.pop();    //��pop
+                p = stack.peek();
+                stack.pop();
                 p = p.right;
             }
         }
@@ -285,18 +285,18 @@ public class TreeNode {
 //        System.out.println(GetNext(tree.nodes.get(3)).val);
 
 
-/*        List<Object> result1 = new ArrayList<>();
-        result1 = tree.preOrder(tree.getRoot(), result1);
+        List<Object> result1 = new ArrayList<>();
+        result1 = tree.preOrder(tree.getRoot());
         System.out.println(result1);
 
 
-        List<Object> result2 = tree.inOrder(tree.getRoot());
-        System.out.println(result2);
-
-        List<Object> result3 = new ArrayList<>();
-        result3 = tree.postOrder(tree.getRoot(), result3);
-        System.out.println(result3);
-//*/
+//        List<Object> result2 = tree.inOrder(tree.getRoot());
+//        System.out.println(result2);
+//
+//        List<Object> result3 = new ArrayList<>();
+//        result3 = tree.postOrder(tree.getRoot(), result3);
+//        System.out.println(result3);
+//
 //        TreeNode root = Tree.reBuildTree3(result1, result2);
 //
 //        assert root != null;
