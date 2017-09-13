@@ -1,5 +1,7 @@
 package com.company.BasedClass;
 
+import com.company.Offers.Chapter2.Tree;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -19,6 +21,7 @@ public class TreeNode {
     public ArrayList<TreeNode> nodes = new ArrayList<>();
     public TreeNode root;
     public TreeNode parent;
+    public int childCount;
 
     public TreeNode() {
     }
@@ -97,6 +100,26 @@ public class TreeNode {
         return this;
     }
 
+    public TreeNode createTree(ArrayList<Object> vals) {
+        for (Object obj:vals){
+            if (obj!=null)
+                nodes.add(new TreeNode(obj));
+            else
+                nodes.add(null);
+        }
+        // the last Parent may have no right child ,so process the former lastParent-1 parents firstly.
+        for (int i=0;i<nodes.size()/2-1;i++){
+            nodes.get(i).left = nodes.get(i*2+1);
+            nodes.get(i).right = nodes.get(i*2+2);
+        }
+        //process the last parent separately.
+        int lastParentIndex = nodes.size()/2-1;
+        nodes.get(lastParentIndex).left = nodes.get(lastParentIndex * 2 + 1);
+        if(nodes.size()%2!=0)
+            nodes.get(lastParentIndex).right = nodes.get(lastParentIndex * 2 + 2);
+        return this;
+    }
+
 
     public static int getTreeHeight(TreeNode node){
         int height1;
@@ -151,6 +174,14 @@ public class TreeNode {
         result.add(root.val);
         inOrder(root.right, result);
         return result;
+    }
+    private void getLeaves(TreeNode p, ArrayList leaf) {
+        if (p != null && p.left == null && p.right == null) {
+            System.out.print(p.val.toString() + "");
+            leaf.add(p);
+            getLeaves(p.left, leaf);
+            getLeaves(p.right, leaf);
+        }
     }
 
     /*inorder on binary tree, using circulate way*/
@@ -253,7 +284,7 @@ public class TreeNode {
         }
     }
 
-    private static void printLevel(TreeNode root, int level){
+    public static void printLevel(TreeNode root, int level){
         if (root == null || level<1)
             return ;
         if (level == 1){
@@ -266,12 +297,22 @@ public class TreeNode {
 
 
 
+
+
     public static void main(String[] args) throws Exception {
         Object[] vals = new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         TreeNode tree = new TreeNode().createTree(vals);
 //        System.out.println(tree.getRoot());
 
-        printTree(tree.getRoot());
+//        printTree(tree.getRoot());
+
+
+        String[][] nodes = new String[][]{{"A","B","C"}, {"C","F","*"}, {"B","D","E"}, {"D","G","*"},{"E","H","I"}};
+        TreeNode root = new TreeNode(nodes[0][0]);
+        root.setLeft(new TreeNode(nodes[0][1]));
+        root.setRight(new TreeNode(nodes[0][2]));
+
+        printTree(root.root);
 
 //        buildParent(tree.getRoot());
 
@@ -285,9 +326,9 @@ public class TreeNode {
 //        System.out.println(GetNext(tree.nodes.get(3)).val);
 
 
-        List<Object> result1 = new ArrayList<>();
-        result1 = tree.preOrder(tree.getRoot());
-        System.out.println(result1);
+//        List<Object> result1 = new ArrayList<>();
+//        result1 = tree.preOrder(tree.getRoot());
+//        System.out.println(result1);
 
 
 //        List<Object> result2 = tree.inOrder(tree.getRoot());
@@ -302,6 +343,8 @@ public class TreeNode {
 //        assert root != null;
 //        List<Object> rootRestlt = root.inOrder(root);
 //        System.out.println(rootRestlt);
+
+
 
 
     }

@@ -1,5 +1,9 @@
 package com.company;
 
+import com.company.BasedClass.TreeNode;
+import com.company.Offers.Chapter2.Array;
+import com.company.Offers.Chapter2.Tree;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,43 +53,116 @@ public class Main {
 
     }
 
+    private static TreeNode buildTree(TreeNode root, String[] nodes){
+        if (root == null){
+            TreeNode root1 = new TreeNode(nodes[0]);
+            TreeNode left = new TreeNode(nodes[1]);
+            TreeNode right = new TreeNode(nodes[2]);
+            root1.setLeft(left);
+            root1.setRight(right);
+            return root1;
+        }
+
+        if (root.getLeft().val.equals(nodes[0])) {
+            root.left = buildTree(root.left, nodes);
+        }
+        if (root.getRight().val.equals(nodes[1])) {
+            root.right = buildTree(root.right, nodes);
+        }
+
+        return root;
+    }
+    //在一直树种寻找跟他相等叶子节点
+    public static TreeNode preOrder(TreeNode root,String value){
+        if (root==null){
+            return null;
+        }
+        if (root.val.equals(value)) {
+            return root;
+        }
+        preOrder(root.left, value);
+        preOrder(root.right, value);
+        return null;
+    }
+
+    private static void getLeaves(TreeNode p, ArrayList leaf) {
+        if (p != null && p.left == null && p.right == null) {
+            System.out.print(p.val + "");
+            leaf.add(p);
+            getLeaves(p.left, leaf);
+            getLeaves(p.right, leaf);
+        }
+    }
+
+    public static int chlidCount(TreeNode root){
+        if (root!=null&&root.right==null&&root.left==null)
+            return 1;
+        if (root!=null&&root.left!=null&&root.right!=null)
+            return chlidCount(root.left)+chlidCount(root.right)+1;
+        if (root!=null&&root.left!=null&&root.right==null)
+            return chlidCount(root.left)+1;
+        if (root!=null&&root.left==null&&root.right!=null)
+            return chlidCount(root.right)+1;
+        return 0;
+    }
+
+
 
 
     public static void main(String[] args) {
-        // write your code here
-//        System.out.println(eight("2147483648"));
-//        System.out.println(eight("18446744073709551617"));
-//        System.out.println(eight_L("18446744073709551617"));
-//        System.out.println(eight_L("+-1234"));
-//        System.out.println(eight("+-1234"));
-//        char a = 1;
-//        System.out.println(nine(1234));
-//        System.out.println(-2147483648);
-//        System.out.println(nine(-2147483648));
-//        System.out.println(nine_L(12321));
-//        System.out.println("hehe");
-//        Object[] vals = new Object[]{1, 2, 3, 4, null, 6, 7};
-//        for (Object o : vals)
-//            System.out.println(o);
-//        List<Object> v = new ArrayList<>();
-//        v.add(1);
-//        v.add(2);
-//        v.add(3);
-//        v.add(4);
-//        v.add(5);
-//        v.add(6);
-//        System.out.println(v);
-//        List<Object> v1 = v.subList(1,2);
-//        System.out.println(v1);
-//        System.out.println(v);
-//        mergeTrees();
-//        System.out.println(13/2);
-//        System.out.println(14/2);
 
-//        System.out.println(meituan_1(5, new int[]{1,2,3,4,5}, 5));
+        int m = 5;
+        int n = 2;
+        String[][] nodes = new String[][]{{"A","B","C"}, {"C","F","*"}, {"B","D","E"}, {"D","G","*"},{"E","H","I"}};
 
-        System.out.println(2&1);
-        System.out.println(3&1);
+        ArrayList<Object> vals = new ArrayList<>();
+        for (String s:nodes[0])
+            vals.add(s);
+
+        int i=1;
+        int count = 0;
+        while (i<vals.size()){
+            boolean hasChild = false;
+            for (int j=0;j<m;j++){
+                if (nodes[j][0].equals(vals.get(i))){
+                    count++;
+                    hasChild = true;
+                    for (int z=1;z<=n;z++)
+                        vals.add(nodes[j][z]);
+                }
+            }
+            if (!hasChild){
+                vals.add(null);
+                vals.add(null);
+            }
+
+            if (count==m-1)
+                break;
+            i++;
+        }
+        System.out.println(vals);
+
+        TreeNode tree = new TreeNode().createTree(vals);
+        TreeNode.printTree(tree.getRoot());
+
+        int num = chlidCount(tree.getRoot());
+        System.out.println(num);
+
+
+
+
+
+
+/*        ArrayList<TreeNode> allNodes = new ArrayList<>();
+        for (int i=0;i<m;i++){
+            TreeNode tempNode = new TreeNode();
+            for (int j=0;j<n;j++){
+
+
+            }
+
+        }*/
+
     }
 
 
