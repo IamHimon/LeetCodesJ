@@ -94,16 +94,12 @@ public class Main {
         }
     }
 
-    public static int chlidCount(TreeNode root){
-        if (root!=null&&root.right==null&&root.left==null)
+    public static int childCount(TreeNode root){
+        if (root==null)
+            return 0;
+        if (root!=null&&root.left==null&&root.right==null)
             return 1;
-        if (root!=null&&root.left!=null&&root.right!=null)
-            return chlidCount(root.left)+chlidCount(root.right)+1;
-        if (root!=null&&root.left!=null&&root.right==null)
-            return chlidCount(root.left)+1;
-        if (root!=null&&root.left==null&&root.right!=null)
-            return chlidCount(root.right)+1;
-        return 0;
+        return childCount(root.left) + childCount(root.right);
     }
 
 
@@ -111,9 +107,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        int m = 5;
+        int m = 6;
         int n = 2;
-        String[][] nodes = new String[][]{{"A","B","C"}, {"C","F","*"}, {"B","D","E"}, {"D","G","*"},{"E","H","I"}};
+        String[][] nodes = new String[][]{{"A","B","C"}, {"C","F","*"}, {"B","D","E"}, {"D","G","*"},{"E","H","I"},{"E","J","K"}};
 
         ArrayList<Object> vals = new ArrayList<>();
         for (String s:nodes[0])
@@ -145,7 +141,7 @@ public class Main {
         TreeNode tree = new TreeNode().createTree(vals);
         TreeNode.printTree(tree.getRoot());
 
-        int num = chlidCount(tree.getRoot());
+        int num = childCount(tree.getRoot());
         System.out.println(num);
 
 

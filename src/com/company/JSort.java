@@ -125,6 +125,7 @@ public class JSort {
             num[n] = temp[tt];
         }
     }
+
     //分解数组,以gap分解,可以分解为len/gap个片段,然后在每两个相邻的连段上做合并(Merge)
     // ,特殊情况:若子片段个数为奇数,最后一个轮空;若子片段为偶数,high的坐标为length-1
     public static void MergePass(int num[], int gap) {
@@ -134,25 +135,73 @@ public class JSort {
             Merge(num, i, i + gap - 1, i + 2 * gap - 1);
 
         //如果最后的片段不到gap长度
-        if (i + gap -1 < num.length)
-            Merge(num, i, i + gap -1, num.length - 1);
+        if (i + gap - 1 < num.length)
+            Merge(num, i, i + gap - 1, num.length - 1);
     }
 
-    private static int[] merge_sort(int num[]){
-        for (int gap=1;gap<num.length;gap = 2*gap){
+    private static int[] merge_sort(int num[]) {
+        for (int gap = 1; gap < num.length; gap = 2 * gap) {
             MergePass(num, gap);
             System.out.println("gap = " + gap + ":\t");
         }
         return num;
     }
 
+    /*堆排序*/
+
+    private static void BuildMaxHeap(int[] A, int len) {
+        for (int i = len / 2; i > 0; i--) {     //从i = len/2 ~ 1,反复调整堆
+            AdjustDown(A, i, len);
+        }
+    }
+
+    private static void AdjustDown(int[] A, int k, int len) {
+        A[0] = A[k];        //用A[0]暂存当前节点
+        for (int i = 2 * k; i <= len; i *= 2) {
+            if (i < len && A[i] < A[i++]) { //A[i]是左孩子,A[i+1]右孩子,沿key较大的子节点向下筛选
+                i++;        //i为较大孩子的下标,如果是有孩子则+1
+            }
+            if (A[0] >= A[i]) {     //根节点均大于左右孩子则返回
+                break;
+            } else {          //将A[i]调整到双亲节点上,修改k的值,一遍继续向下筛选.
+                A[k] = A[i];
+                k = i;
+            }
+        }
+        A[k] = A[0]; //被筛选节点的值放入最终的位置
+    }
+
+    /*传入一个len+1的数组A,A[0]作为暂存器用来交换元素
+    *
+    * 堆排序是一种树型排序方法,在排序过程中,将A[1...n](A[0]作为暂存器)看成一颗完全二叉树的顺序存储结构,利用完全二叉树中双亲节点和孩子节点之间的内在关系,
+    * 在当前无序区中选择关键字最大(最小)的元素.
+    *
+    * 建成初始堆(假设是大顶堆)后,堆顶元素就是最大值.输出堆顶元素后(将堆底元素与堆顶元素交换),此时根节点以不满足大顶堆的性质,堆被破坏,则讲元素
+    * 向下调整时期继续保持大顶堆的特点.再输出堆顶元素.如此反复,直到对中仅省一个元素为止(A[1]).
+    * */
+    private static void HeapSort(int[] A, int len) {
+        BuildMaxHeap(A, len);   //初始建堆
+        for (int i = len; i > 1; i--) { //n-1趟的交换和建堆过程
+            A[0] = A[1];           //对顶元素和堆底元素交换.
+            A[1] = A[i];
+            A[i] = A[0];
+            AdjustDown(A, 1, i-1);  //把剩余的n-1个元素整理成堆
+        }
+        System.out.println(Arrays.toString(A));
+    }
+
+
     public static void main(String[] args) throws Exception {
-        int[] a = {57, 14, 68, 59, 52, 72, 28, 96, 33, 24};
+//        int[] a = {0, 57, 14, 68, 59, 52, 72, 28, 96, 33, 24};
+        int[] a = {0, 53, 17, 78, 9, 45, 65, 87, 32};
+        HeapSort(a, a.length - 1);
+//        BuildMaxHeap(a, a.length - 1);
+//        System.out.println(Arrays.toString(a));
 //        quickSort(a, 0, a.length - 1);
 //        SortAge(a);
 //        insertSort(a);
-        merge_sort(a);
-        System.out.println(Arrays.toString(a));
+//        merge_sort(a);
+//        System.out.println(Arrays.toString(a));
 //        System.out.println(Math.sqrt(178 * 2));
 //        System.out.println(10318/((187+2)*2));
     }
