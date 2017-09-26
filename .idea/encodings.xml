@@ -2,9 +2,9 @@
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/src/com/company/BasedClass/CQueue.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/com/company/JSort.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/com/company/Offers/Chapter2/Array.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/com/company/Offers/Chapter2/Common.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/com/company/learnJava/JSort.java" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

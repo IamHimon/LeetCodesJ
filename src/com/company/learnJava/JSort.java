@@ -1,4 +1,4 @@
-package com.company;
+package com.company.learnJava;
 
 import com.company.Offers.Chapter2.Array;
 import com.company.Offers.Chapter2.String_p;

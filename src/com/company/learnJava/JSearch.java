@@ -1,4 +1,4 @@
-package com.company;
+package com.company.learnJava;
 
 /**
  * Created by himon on 17-8-30.
