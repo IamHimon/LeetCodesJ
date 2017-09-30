@@ -3,6 +3,7 @@ package com.company.Offers.Chapter4;
 import com.company.BasedClass.TreeNode;
 import com.company.Offers.Chapter2.Array;
 import org.omg.CORBA.OBJ_ADAPTER;
+import sun.security.krb5.internal.crypto.Des;
 
 import java.util.*;
 
@@ -323,7 +324,7 @@ public class Common {
 
             } else {
                 pNode = stack.pop();
-                if (!path.isEmpty()&&pNode.right==null)
+                if (!path.isEmpty() && pNode.right == null)
                     path.remove(path.size() - 1);
                 pNode = pNode.right;
             }
@@ -336,25 +337,26 @@ public class Common {
     private static int sum(ArrayList<TreeNode> path) {
         int sum = 0;
         for (TreeNode p : path)
-            sum += (Integer)p.val;
+            sum += (Integer) p.val;
         return sum;
     }
 
     private static ArrayList<TreeNode> path = new ArrayList<>();
+
     private static void findPath1(TreeNode root, int expectedSum) {
         if (root == null)
             return;
         path.add(root);
-        if (sum(path)==expectedSum&& root.right==null&& root.left==null){
+        if (sum(path) == expectedSum && root.right == null && root.left == null) {
             System.out.println(sum(path));
-            for (TreeNode t:path)
-                System.out.print(t.val+" ");
+            for (TreeNode t : path)
+                System.out.print(t.val + " ");
             System.out.println();
         }
 
-        if (root.left!=null)
+        if (root.left != null)
             findPath1(root.left, expectedSum);
-        if (root.right!=null)
+        if (root.right != null)
             findPath1(root.right, expectedSum);
 
         if (!path.isEmpty())
@@ -362,17 +364,85 @@ public class Common {
     }
 
     /*面试题35,复杂链表复制*/
-    
+
+
+    /*面试题36,序列化和反序列化二叉树*/
+    //序列化:输出数值,遇到null输出'&',用','隔开
+    //思路:前序遍历
+    static String serializeStr = "";
+
+    private static void Serialize(TreeNode root) {
+        if (root == null) {
+//            System.out.println("&");
+            serializeStr += "&,";
+            return;
+        }
+//        System.out.println(root.val + ",");
+        serializeStr += root.val + ",";
+        Serialize(root.left);
+        Serialize(root.right);
+    }
+
+    //反序列化:把序列化的字符串存入到队列中,再以前序遍历从队列中取值来构建二叉树.
+    private static void Deserialize(String serializeStr) {
+        String[] nodesStr = serializeStr.split(",");
+        Queue<String> nodes = new LinkedList<>();
+        Collections.addAll(nodes, nodesStr);
+        TreeNode tree = buildTreePreOrder(nodes);
+        TreeNode.printTree(tree);
+    }
+
+    //前序遍历构建二叉树,输入一个队列,这个队列的输入也是以前序便利的顺序输入的
+    private static TreeNode buildTreePreOrder(Queue<String> nodes) {
+        String val = nodes.poll();
+        if (val.equals("&"))
+            return null;
+
+        TreeNode node = new TreeNode(Integer.valueOf(val));
+        node.left = buildTreePreOrder(nodes);
+        node.right = buildTreePreOrder(nodes);
+        return node;
+    }
+
+    /*面试题38,字符串的排列*/
+    private static void Permutation(String str) {
+        if (str == null)
+            return;
+        Permutation(str.toCharArray(), 0, str.length()-1);
+    }
+
+    static List<String> allPermStr = new ArrayList<>();
+
+    private static void Permutation(char[] str, int start, int end) {
+        if (end <= 1)
+            return;
+        if (start == end) {
+            System.out.println(str);
+        } else {
+            for (int i = start; i <= end; i++) {
+                swap(str, start, i);
+                Permutation(str, start + 1, end);
+                swap(str, start, i);
+            }
+        }
+
+    }
+
+    private static void swap(char[] str, int i, int j) {
+        char temp = str[j];
+        str[j] = str[i];
+        str[i] = temp;
+    }
 
 
     public static void main(String[] args) {
 //        Object[] vals1 = new Object[]{8, 8, 7, 9, 2, null, null, null, null, 4, 7};
 //        Object[] vals2 = new Object[]{8, 8, 2, 3, 4, 6, 7};
-        Object[] vals2 = new Object[]{8, 6, 10, 5, 7, 9, 11};
+//        Object[] vals2 = new Object[]{8, 6, 10, 5, 7, 9, 11};
 //        Object[] vals3 = new Object[]{7, 7, 7, 7, 7, 7, 7};
 //        TreeNode tree1 = new TreeNode().createTree(vals1);
-        TreeNode tree2 = new TreeNode().createTree(vals2);
-        findPath1(tree2.getRoot(), 21);
+//        TreeNode tree2 = new TreeNode().createTree(vals2);
+//        findPath1(tree2.getRoot(), 21);
 //        TreeNode tree3 = new TreeNode().createTree(vals3);
 
 //        hasSubTree(tree1.getRoot(), tree2.getRoot());
@@ -399,6 +469,12 @@ public class Common {
 
 //        System.out.println(verifySequenceOfBST(new int[]{5, 7, 6, 9, 11, 10, 8}, 0, 7));
 //        System.out.println(verifySequenceOfBST(new int[]{7,4,6,5}, 0, 4));
+//        Serialize(tree2.getRoot());
+//        System.out.println(serializeStr);
+//        Deserialize(serializeStr);
+
+        Permutation("abc");
+        System.out.println(allPermStr);
 
     }
 }
