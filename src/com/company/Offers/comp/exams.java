@@ -67,35 +67,47 @@ public class exams {
     }
 
 
-    /*微软*/
+    /*微软,一个rows*columns的方法,0看做树,1看做土地,相邻的0(上下左右对角线)构成一个树林,问树林的个数,以及各树林中树的大小*/
     public static void treeGraph() {
-        int rows = 5, columns = 3;
-        int[][] grids = new int[][]{{0, 0, 1}, {1, 0, 0}, {1, 1, 1}, {0, 0, 0}, {0, 1, 1}};
-        System.out.println(grids[0][0]);
-        System.out.println(grids[1][0]);
-        System.out.println(grids[1][1]);
+        int rows = 5, columns = 4;
+        int[][] grids = new int[][]{{0, 0, 1, 1}, {1, 1, 1, 0}, {1, 1, 1, 0}, {0, 0, 1, 1}, {0, 0, 1, 1}};
 
         boolean[][] visited = new boolean[rows][columns];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                int count = graphCount(grids, rows, columns, i, j, visited, i, j);
+                if (count > 0)
+                    System.out.println(count);
+            }
+        }
 
-        int count = graphCount(grids, rows, columns, 0, 0, visited, 0, 0);
-        System.out.println(count);
         System.out.println(Arrays.deepToString(visited));
 
     }
-
-    private static int graphCount(int[][] grids, int rows, int columns, int i, int j, boolean[][] visited, int beforeRow, int beforeCol) {
+    //回溯法求树林的树个数
+    /*
+    * visited[][]用来表示有没有被访问,
+    * row,col:当前要判断点的坐标
+    * beforeRow, beforeCol:他的父节点的坐标,因为要判断是不是与父节点相邻.
+    * */
+    private static int graphCount(int[][] grids, int rows, int columns, int row, int col, boolean[][] visited, int beforeRow, int beforeCol) {
         int count = 0;
-        if (check(grids, rows, columns, i, i, visited, 0, 0)) {
-            System.out.println("i:"+i+", j:"+j);
-            visited[i][j] = true;
-            count = 1 + graphCount(grids, rows, columns, i + 1, j, visited, i, j)
-                    + graphCount(grids, rows, columns, i - 1, j, visited, i, j)
-                    + graphCount(grids, rows, columns, i, j + 1, visited, i, j)
-                    + graphCount(grids, rows, columns, i, j - 1, visited, i, j);
+        if (check(grids, rows, columns, row, col, visited, beforeRow, beforeCol)) {
+//            System.out.println("visit:"+visited[row][col]);
+            visited[row][col] = true;
+            count = 1 + graphCount(grids, rows, columns, row + 1, col, visited, row, col)
+                    + graphCount(grids, rows, columns, row - 1, col, visited, row, col)
+                    + graphCount(grids, rows, columns, row, col + 1, visited, row, col)
+                    + graphCount(grids, rows, columns, row, col - 1, visited, row, col);
         }
         return count;
     }
-
+    /*判断条件:
+    *1.坐标在范围内
+    *2.坐标点值为0
+     *3.与父节点相邻
+      * 4.visit[][]为false
+    * */
     private static boolean check(int[][] grids, int rows, int columns, int row, int col, boolean[][] visit,
                                  int beforeRow, int beforeCol) {
         return (row >= 0 && row < rows) && (col >= 0 && col < columns) && (grids[row][col] == 0) && !visit[row][col]
