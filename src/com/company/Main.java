@@ -12,29 +12,29 @@ import static com.company.Solu.Solution.*;
 
 public class Main {
 
-    public static int meituan_1(int N, int[] num, int V){
+    public static int meituan_1(int N, int[] num, int V) {
         if (num.length != N)
             return 0;
 
-        int[] W = new int[N+1];
+        int[] W = new int[N + 1];
         W[0] = 0;
-        for (int i=1;i<N;i++)
+        for (int i = 1; i < N; i++)
             W[i] = 1;
 
-        int[] C = new int[N+1];
+        int[] C = new int[N + 1];
         C[0] = 0;
-        for (int i=1;i<N;i++) {
+        for (int i = 1; i < N; i++) {
             C[i] = num[i - 1];
         }
 
         int max_sum = 0;
-        for (int n:num){
+        for (int n : num) {
             max_sum += n;
         }
 
         int VV = V;
-        for (int k = 1;k<=max_sum/VV;k++){
-            V = k*VV;
+        for (int k = 1; k <= max_sum / VV; k++) {
+            V = k * VV;
             int[][] f = new int[N + 1][V + 1];
             for (int i = 1; i <= N; i++) {
                 for (int j = 1; j <= V; j++) {
@@ -53,8 +53,8 @@ public class Main {
 
     }
 
-    private static TreeNode buildTree(TreeNode root, String[] nodes){
-        if (root == null){
+    private static TreeNode buildTree(TreeNode root, String[] nodes) {
+        if (root == null) {
             TreeNode root1 = new TreeNode(nodes[0]);
             TreeNode left = new TreeNode(nodes[1]);
             TreeNode right = new TreeNode(nodes[2]);
@@ -72,9 +72,10 @@ public class Main {
 
         return root;
     }
+
     //在一直树种寻找跟他相等叶子节点
-    public static TreeNode preOrder(TreeNode root,String value){
-        if (root==null){
+    public static TreeNode preOrder(TreeNode root, String value) {
+        if (root == null) {
             return null;
         }
         if (root.val.equals(value)) {
@@ -94,45 +95,43 @@ public class Main {
         }
     }
 
-    public static int childCount(TreeNode root){
-        if (root==null)
+    public static int childCount(TreeNode root) {
+        if (root == null)
             return 0;
-        if (root!=null&&root.left==null&&root.right==null)
+        if (root != null && root.left == null && root.right == null)
             return 1;
         return childCount(root.left) + childCount(root.right);
     }
-
-
 
 
     public static void main(String[] args) {
 
         int m = 6;
         int n = 2;
-        String[][] nodes = new String[][]{{"A","B","C"}, {"C","F","*"}, {"B","D","E"}, {"D","G","*"},{"E","H","I"},{"E","J","K"}};
+        String[][] nodes = new String[][]{{"A", "B", "C"}, {"C", "F", "*"}, {"B", "D", "E"}, {"D", "G", "*"}, {"E", "H", "I"}, {"E", "J", "K"}};
 
         ArrayList<Object> vals = new ArrayList<>();
-        for (String s:nodes[0])
+        for (String s : nodes[0])
             vals.add(s);
 
-        int i=1;
+        int i = 1;
         int count = 0;
-        while (i<vals.size()){
+        while (i < vals.size()) {
             boolean hasChild = false;
-            for (int j=0;j<m;j++){
-                if (nodes[j][0].equals(vals.get(i))){
+            for (int j = 0; j < m; j++) {
+                if (nodes[j][0].equals(vals.get(i))) {
                     count++;
                     hasChild = true;
-                    for (int z=1;z<=n;z++)
+                    for (int z = 1; z <= n; z++)
                         vals.add(nodes[j][z]);
                 }
             }
-            if (!hasChild){
+            if (!hasChild) {
                 vals.add(null);
                 vals.add(null);
             }
 
-            if (count==m-1)
+            if (count == m - 1)
                 break;
             i++;
         }
@@ -143,8 +142,6 @@ public class Main {
 
         int num = childCount(tree.getRoot());
         System.out.println(num);
-
-
 
 
 

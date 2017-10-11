@@ -121,5 +121,6 @@ public class exams {
 //        System.out.println(-Integer.MAX_VALUE);
 
         treeGraph();
+        System.out.println("hello world!");
     }
 }

@@ -227,6 +227,58 @@ public class Common {
         System.out.println(intSet);
     }
 
+
+    /*
+    * 面试题41，数据流中的中位数
+    *
+    * */
+    private static PriorityQueue<Integer> maxHeap, minHeap;
+
+    private static void addFlowNums(int[] nums) {
+
+        Comparator<Integer> revCamp = new Comparator<Integer>() {
+            @Override
+            public int compare(Integer left, Integer right) {
+                return right.compareTo(left);
+            }
+        };
+
+        maxHeap = new PriorityQueue<Integer>(20, revCamp);
+        minHeap = new PriorityQueue<Integer>(20);
+
+
+    }
+
+    private static void insertElem(int num) {
+        if ((maxHeap.size() + minHeap.size() & 1) == 0) {  //奇数->minHeap
+            //如果num比maxHeap中的最大值还小，则先将num加入maxHeap中，再取maxHeap中的最大值取出来，插入minHeap中
+            if (maxHeap.size()>0 && num<maxHeap.peek()){
+                maxHeap.add(num);
+                num = maxHeap.peek();
+                maxHeap.remove(num);
+            }
+            
+
+
+        } else {     //偶数->maxHeap
+
+            //如果num比minHeap中最小的值还大，则现将num加入到minHeap中，再取出minHeap中的最小值，插入到maxHeap中
+
+
+        }
+
+
+    }
+
+    private static int getMedian() {
+        int size = minHeap.size() + maxHeap.size();
+        if ((size & 1) == 1) {  //奇数
+            return minHeap.peek();
+        } else {
+            return (minHeap.peek() + maxHeap.peek()) / 2;
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         //面试题39
 //        int[] num = new int[]{3, 1, 4, 4, 8, 4, 9, 4, 4};
