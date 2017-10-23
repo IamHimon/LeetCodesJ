@@ -277,6 +277,9 @@ public class Common {
     }
 
 
+
+
+
     /*
     * 面试题45,把数组排成最小数
     *将这个问题看作排序问题，自定义compareTo函数
