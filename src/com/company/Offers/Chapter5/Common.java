@@ -1,7 +1,6 @@
 package com.company.Offers.Chapter5;
 
 import com.company.Offers.Chapter2.Array;
-import org.omg.CORBA.INTERNAL;
 
 import java.util.*;
 
@@ -231,9 +230,7 @@ public class Common {
 
     /*
     * 面试题41，数据流中的中位数
-    *用一个最大堆实现左边的数据容器,用一个最小堆实现右边的数据容器.
-    * 在新数据过来时要保证: (1)数据平均分配到两个堆中,则总数为偶数时插入到最小堆,奇数插入到最大堆.
-    * (2)最大堆中所有的数据小于最小堆中的数据.需要将新数据跟最小堆以及最大堆的heap比较,来做相应处理.
+    *
     * */
     private static PriorityQueue<Integer> maxHeap, minHeap;
 
@@ -246,144 +243,41 @@ public class Common {
             }
         };
 
-        maxHeap = new PriorityQueue<>(20, revCamp);
-        minHeap = new PriorityQueue<>(20);
+        maxHeap = new PriorityQueue<Integer>(20, revCamp);
+        minHeap = new PriorityQueue<Integer>(20);
 
-        for (int n : nums) {
-            insertElem(n);
-        }
-        System.out.println(getMedian());
 
     }
 
     private static void insertElem(int num) {
-        if ((maxHeap.size() + minHeap.size() & 1) == 0) {  //奇数->minHeap(右边)
+        if ((maxHeap.size() + minHeap.size() & 1) == 0) {  //奇数->minHeap
             //如果num比maxHeap中的最大值还小，则先将num加入maxHeap中，再取maxHeap中的最大值取出来，插入minHeap中
-            if (maxHeap.size() > 0 && num < maxHeap.peek()) {
+            if (maxHeap.size()>0 && num<maxHeap.peek()){
                 maxHeap.add(num);
-                num = maxHeap.peek(); //num为最大值
+                num = maxHeap.peek();
                 maxHeap.remove(num);
             }
+            
 
-            minHeap.add(num);
-        } else {     //偶数->maxHeap(左边)
+
+        } else {     //偶数->maxHeap
 
             //如果num比minHeap中最小的值还大，则现将num加入到minHeap中，再取出minHeap中的最小值，插入到maxHeap中
-            if (minHeap.size() > 0 && num > minHeap.peek()) {
-                minHeap.add(num);
-                num = minHeap.peek();
-                minHeap.remove(num);
-            }
-            maxHeap.add(num);
+
+
         }
+
+
     }
 
-    private static double getMedian() {
-        if (maxHeap.isEmpty())
-            return -1;
+    private static int getMedian() {
         int size = minHeap.size() + maxHeap.size();
         if ((size & 1) == 1) {  //奇数
             return minHeap.peek();
         } else {
-            return (double) (minHeap.peek() + maxHeap.peek()) / 2;
+            return (minHeap.peek() + maxHeap.peek()) / 2;
         }
     }
-
-
-    /*面试题42,连续子数组的最大和*/
-    private static int greatestSumOfSubArray(int[] nums) {
-        if (nums.length <= 0)
-            return 0;
-
-        int sum = 0;
-        int maxSum = 0;
-        int low = 0;//和最大子数组的左边界
-        int high = 0;
-        int subHigh = 0;//记下和最大子数组的右边界
-
-        while (low < nums.length && high < nums.length) {
-            sum += nums[high];
-            if (sum < 0) {      //如果sum为负,责令sum为初始值0,且更新low,high指向下一个位置.
-                sum = 0;
-                low = high + 1;
-                high++;
-            } else {
-                high++;
-            }
-            if (maxSum < sum) {
-                maxSum = sum;
-                subHigh = high;
-            }
-        }
-        int[] subArray = new int[subHigh - low];
-        for (int i = low; i < subHigh; i++) {
-            subArray[i - low] = nums[i];
-        }
-        System.out.println(Arrays.toString(subArray));
-        System.out.println(maxSum);
-
-        return maxSum;
-    }
-
-    //解法二,动态规划
-    /*
-    *下面是求f(i)的公式:
-    * f(i) = nums[i]        , i=0或者f(i-1)<0
-    *       f(i-1) + nums[i], i>0或者f(i-1)>=0
-    *
-    * 因此我们需要求出max(f(i)),其中0<=i<=n.
-    * */
-    private static int greatestSumOfSubArray2(int[] nums) {
-        if (nums.length <= 0)
-            return 0;
-
-        int sum = 0;    //即是f(i)
-        int maxSum = 0;     //即是max(f(i))
-
-        for (int i = 0; i < nums.length; i++) {
-            if (i == 0 || sum < 0) {
-                sum = nums[i];
-            } else {
-                sum += nums[i];
-            }
-
-            if (maxSum < sum)
-                maxSum = sum;
-        }
-
-        System.out.println(maxSum);
-        return maxSum;
-    }
-
-    /*面试题44,
-    * 数字序列中某一位的数字
-    *
-    * */
-    private static int digitAtIndex(int index) {
-        int i = 1;
-        int sum = 1;
-        //确定index在几位数段
-        while (sum <= index) {
-            sum += 9 * Math.pow(10, i - 1) * i;
-            i++;
-        }
-        i -= 1;
-
-        //index减去前面段的位数,(如:-10*1,-90*2,-900*3等)
-        index--; //先减一,因为当i为2,1段的位数是10,而循环中是减去9
-        for (int j = 1; j < i; j++) {
-            index -= 9 * Math.pow(10, j - 1) * j;
-        }
-        int b = index / i; //倍数
-        int y = index % i;  //余数
-
-        int num = (int) Math.pow(10, i - 1) + b;
-        int result = (num / (int) Math.pow(10, y)) % 10;
-
-        System.out.println(result);
-        return result;
-    }
-
 
     public static void main(String[] args) throws Exception {
         //面试题39
@@ -395,20 +289,10 @@ public class Common {
 //        System.out.println(MoreThanHalfNum3(num));
 
         //面试题40
-//        int[] num = new int[]{4, 5, 1, 6, 2, 7, 3, 8};
+        int[] num = new int[]{4, 5, 1, 6, 2, 7, 3, 8};
 //        GetLeastKNumbers(num, 4);
-//        GetLeastKNumbers2(num, 4);
+        GetLeastKNumbers2(num, 4);
 
-        //面试题41
-//        addFlowNums(num);
-
-        //面试题42
-//        int[] nums = new int[]{1, -2, 3, 10, -4, 7, 2, -5};
-//        greatestSumOfSubArray(nums);
-//        greatestSumOfSubArray2(nums);
-
-        //面试题44
-        digitAtIndex(13);
 
     }
 

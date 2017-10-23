@@ -57,6 +57,8 @@ public class JSort {
         quickSort(A, i + 1, high); //在key左边再进行
     }
 
+    //快速排序，自定义
+
 
     /*给员工年龄排序，规定员工年龄的范围是0-99
     *先初始化timeOfAges[]都为0,然后根据输入ages来构造它，年龄出现了多少次就在ages里面设置几次该年龄
