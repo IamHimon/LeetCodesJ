@@ -91,9 +91,6 @@ public class JSort {
 
     }
 
-    public static void hello() {
-        System.out.println("hello");
-    }
 
     /*归并排序*/
     //合并相邻的两个片段,合并之后是有序的.
@@ -148,6 +145,42 @@ public class JSort {
     }
 
 
+    /*归并排序,王道版本*/
+    private static int[] B = new int[20];
+
+    private static void WDMerge(int[] A, int low, int middle, int high) {
+        //讲A中所有元素复制给B
+        for (int k = low; k < high; k++) {
+            B[k] = A[k];
+        }
+        int i = low;
+        int j = middle + 1;
+        int k = i;
+        for (; i < middle && j < high; k++) {
+            if (B[i] < B[j]) {
+                A[k] = B[i++];  //将较小元素复制到A中
+            } else {
+                A[k] = B[j++];
+            }
+        }
+        while (i < low)
+            A[k++] = B[i++];
+
+        while (j < high)
+            A[k++] = B[j++];
+
+    }
+
+    private static void WDMergeSort(int[] A, int low, int high) {
+        if (low < high) {
+            int middle = (low + high) / 2;  //从中间划分两个子序列
+            WDMergeSort(A, low, middle);    //对左侧序列进行递归排序
+            WDMergeSort(A, middle + 1, high);   //对右测序列进行递归排序
+            Merge(A, low, middle, high);    //归并
+        }
+    }
+
+
     /*堆排序*/
 
     private static void BuildMaxHeap(int[] A, int len) {
@@ -186,7 +219,7 @@ public class JSort {
             A[0] = A[1];           //对顶元素和堆底元素交换.
             A[1] = A[i];
             A[i] = A[0];
-            AdjustDown(A, 1, i-1);  //把剩余的n-1个元素整理成堆
+            AdjustDown(A, 1, i - 1);  //把剩余的n-1个元素整理成堆
         }
         System.out.println(Arrays.toString(A));
     }
@@ -195,7 +228,9 @@ public class JSort {
     public static void main(String[] args) throws Exception {
 //        int[] a = {0, 57, 14, 68, 59, 52, 72, 28, 96, 33, 24};
         int[] a = {0, 53, 17, 78, 9, 45, 65, 87, 32};
-        HeapSort(a, a.length - 1);
+        WDMergeSort(a, 0, a.length - 1);
+        System.out.println(Arrays.toString(a));
+//        HeapSort(a, a.length - 1);
 //        BuildMaxHeap(a, a.length - 1);
 //        System.out.println(Arrays.toString(a));
 //        quickSort(a, 0, a.length - 1);

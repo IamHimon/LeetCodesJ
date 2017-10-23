@@ -1,6 +1,7 @@
 package com.company.Offers.Chapter5;
 
 import com.company.Offers.Chapter2.Array;
+import org.omg.CORBA.INTERNAL;
 
 import java.util.*;
 
@@ -333,25 +334,54 @@ public class Common {
     * 因此我们需要求出max(f(i)),其中0<=i<=n.
     * */
     private static int greatestSumOfSubArray2(int[] nums) {
-        if (nums.length<=0)
+        if (nums.length <= 0)
             return 0;
 
         int sum = 0;    //即是f(i)
         int maxSum = 0;     //即是max(f(i))
 
-        for (int i=0;i<nums.length;i++) {
-            if (i == 0 || sum < 0){
+        for (int i = 0; i < nums.length; i++) {
+            if (i == 0 || sum < 0) {
                 sum = nums[i];
-            }else {
+            } else {
                 sum += nums[i];
             }
 
-            if (maxSum<sum)
+            if (maxSum < sum)
                 maxSum = sum;
         }
 
         System.out.println(maxSum);
         return maxSum;
+    }
+
+    /*面试题44,
+    * 数字序列中某一位的数字
+    *
+    * */
+    private static int digitAtIndex(int index) {
+        int i = 1;
+        int sum = 1;
+        //确定index在几位数段
+        while (sum <= index) {
+            sum += 9 * Math.pow(10, i - 1) * i;
+            i++;
+        }
+        i -= 1;
+
+        //index减去前面段的位数,(如:-10*1,-90*2,-900*3等)
+        index--; //先减一,因为当i为2,1段的位数是10,而循环中是减去9
+        for (int j = 1; j < i; j++) {
+            index -= 9 * Math.pow(10, j - 1) * j;
+        }
+        int b = index / i; //倍数
+        int y = index % i;  //余数
+
+        int num = (int) Math.pow(10, i - 1) + b;
+        int result = (num / (int) Math.pow(10, y)) % 10;
+
+        System.out.println(result);
+        return result;
     }
 
 
@@ -373,9 +403,12 @@ public class Common {
 //        addFlowNums(num);
 
         //面试题42
-        int[] nums = new int[]{1, -2, 3, 10, -4, 7, 2, -5};
-        greatestSumOfSubArray(nums);
-        greatestSumOfSubArray2(nums);
+//        int[] nums = new int[]{1, -2, 3, 10, -4, 7, 2, -5};
+//        greatestSumOfSubArray(nums);
+//        greatestSumOfSubArray2(nums);
+
+        //面试题44
+        digitAtIndex(13);
 
     }
 
