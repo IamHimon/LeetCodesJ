@@ -1,6 +1,7 @@
 package com.company.Offers.Chapter5;
 
 import com.company.Offers.Chapter2.Array;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 import java.util.*;
 
@@ -252,22 +253,18 @@ public class Common {
     private static void insertElem(int num) {
         if ((maxHeap.size() + minHeap.size() & 1) == 0) {  //奇数->minHeap
             //如果num比maxHeap中的最大值还小，则先将num加入maxHeap中，再取maxHeap中的最大值取出来，插入minHeap中
-            if (maxHeap.size()>0 && num<maxHeap.peek()){
+            if (maxHeap.size() > 0 && num < maxHeap.peek()) {
                 maxHeap.add(num);
                 num = maxHeap.peek();
                 maxHeap.remove(num);
             }
-            
 
 
         } else {     //偶数->maxHeap
 
             //如果num比minHeap中最小的值还大，则现将num加入到minHeap中，再取出minHeap中的最小值，插入到maxHeap中
 
-
         }
-
-
     }
 
     private static int getMedian() {
@@ -277,6 +274,133 @@ public class Common {
         } else {
             return (minHeap.peek() + maxHeap.peek()) / 2;
         }
+    }
+
+
+    /*
+    * 面试题45,把数组排成最小数
+    *将这个问题看作排序问题，自定义compareTo函数
+    * */
+    private static void combineNum2Min(int[] nums) {
+        quickSort(nums, 0, nums.length - 1);
+        System.out.println(Arrays.toString(nums));
+    }
+
+    //自定义排序函数，传入自定义比较器，从'小'到'大'排序
+    private static void quickSort(int[] nums, int low, int high) {
+        if (low >= high)    //必须先判断
+            return;
+        int mid = partition(nums, low, high);
+        quickSort(nums, low, mid - 1);
+        quickSort(nums, mid + 1, high);
+    }
+
+    private static int partition(int[] nums, int low, int high) {
+        int i = low;
+        int j = high;
+        int temp = nums[low];
+        while (i < j) {
+            while (i < j && compareString(nums[j], temp) >= 0)   //从后往前找比temp大的，交换
+                j--;
+            nums[i] = nums[j];
+            while (i < j && compareString(nums[i], temp) <= 0)   //从前往后找比temp小的，交换
+                i++;
+            nums[j] = nums[i];
+        }
+        nums[j] = temp;
+        return j;
+    }
+
+    //实现字符串表示数字的比较函数
+    private static int compareString(int a, int b) {
+        String s1 = String.valueOf(a) + String.valueOf(b);
+        String s2 = String.valueOf(b) + String.valueOf(a);
+        s1.compareTo(s2);
+        return compareTo(s1, s2);
+    }
+
+    //比较两个字符串s1,s2,如果s1<s2，返回-1，否则返回1
+    private static int compareTo(String s1, String s2) {
+        if (s1 == null || s2 == null)
+            return -1;
+
+        int len1 = s1.length();
+        int len2 = s2.length();
+        int lenLim = Math.min(len1, len2);
+        //"32321","32132",比较是从k=0，即'3'，'3'开始
+        int k = 0;
+        while (k < lenLim) {
+            char c1 = s1.charAt(k);
+            char c2 = s2.charAt(k);
+            if (c1 != c2)
+                return c1 - c2;
+            k++;
+        }
+        return len1 - len2;
+
+    }
+
+
+    //面试题46
+    /*
+    * Fibonacci数列的解法，方程：f(i)=f(i+1)+g(i,i+1)f(i+2),
+    * 递归的解法存在重复。可转变为自下向上的解法，也就是从最后一个字符开始。
+    * */
+    private static int getTranslation(int number) {
+        if (number < 0)
+            return 0;
+        return getTranslationCount(String.valueOf(number));
+    }
+
+    //将f(i)存在数组counts[i]的位置，初始值：f(length-1)=1
+    private static int getTranslationCount(String number) {
+        int length = number.length();
+        int[] counts = new int[length];
+        int count;
+        for (int i = length - 1; i >= 0; i--) {     //从下向上
+            if (i < length - 1)
+                count = counts[i + 1];
+            else
+                count = 1;
+            if (i < length - 1) {
+                int digit1 = number.charAt(i) - '0';
+                int digit2 = number.charAt(i + 1) - '0';
+                int converted = digit1 * 10 + digit2;
+                if (converted >= 10 && converted <= 25) {
+                    if (i < length - 2)
+                        count += counts[i + 2];
+                    else
+                        count += 1;
+                }
+            }
+            counts[i] = count;
+        }
+        System.out.println(Arrays.toString(counts));
+        return counts[0];
+    }
+
+    /*
+    * 面试题47，礼物的最大值
+    *
+    * */
+    //解法一：动态规划，用maxValues[i][j]来暂存坐标为（i，j）的格子时能拿到礼物的最大值
+    private static int getMaxValue_solution1(int[] values, int rows, int cols) {
+        if (values.length <= 0 || rows <= 0 || cols <= 0)
+            return 0;
+        int[][] maxValues = new int[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                int left = 0;
+                int up = 0;
+                if (i > 0)
+                    up = maxValues[i - 1][j];
+                if (j > 0)
+                    left = maxValues[i][j - 1];
+                maxValues[i][j] = Math.max(up, left) + values[i * cols + j];
+            }
+        }
+        return maxValues[rows - 1][cols - 1];   //走到右下角的最大价值
     }
 
     public static void main(String[] args) throws Exception {
@@ -289,9 +413,28 @@ public class Common {
 //        System.out.println(MoreThanHalfNum3(num));
 
         //面试题40
-        int[] num = new int[]{4, 5, 1, 6, 2, 7, 3, 8};
+//        int[] num = new int[]{4, 5, 1, 6, 2, 7, 3, 8};
 //        GetLeastKNumbers(num, 4);
-        GetLeastKNumbers2(num, 4);
+//        GetLeastKNumbers2(num, 4);
+
+        //面试题45
+//        int[] nums = new int[]{3,32,321,5,1,64,4};
+//
+//        quickSort(nums, 0, 6);
+//        System.out.println(Arrays.toString(nums));
+
+        //面试题46
+
+//        int result = getTranslation(12218);
+//        System.out.println(result);
+
+
+        //面试题47
+        int[] values = new int[]{1, 10, 3, 8, 12, 2, 9, 6, 5, 7, 4, 11, 3, 7, 16, 5};
+        int rows = 4;
+        int cols = 4;
+        int maxValues = getMaxValue_solution1(values, rows, cols);
+        System.out.println(maxValues);
 
 
     }
