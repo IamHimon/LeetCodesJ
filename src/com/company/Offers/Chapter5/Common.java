@@ -229,7 +229,6 @@ public class Common {
     }
 
 
-
     /*
     * 面试题41，数据流中的中位数
     *用一个最大堆实现左边的数据容器,用一个最小堆实现右边的数据容器.
@@ -335,20 +334,20 @@ public class Common {
     * 因此我们需要求出max(f(i)),其中0<=i<=n.
     * */
     private static int greatestSumOfSubArray2(int[] nums) {
-        if (nums.length<=0)
+        if (nums.length <= 0)
             return 0;
 
         int sum = 0;    //即是f(i)
         int maxSum = 0;     //即是max(f(i))
 
-        for (int i=0;i<nums.length;i++) {
-            if (i == 0 || sum < 0){
+        for (int i = 0; i < nums.length; i++) {
+            if (i == 0 || sum < 0) {
                 sum = nums[i];
-            }else {
+            } else {
                 sum += nums[i];
             }
 
-            if (maxSum<sum)
+            if (maxSum < sum)
                 maxSum = sum;
         }
 
@@ -483,6 +482,320 @@ public class Common {
         return maxValues[rows - 1][cols - 1];   //走到右下角的最大价值
     }
 
+    /*
+    * 面试题49,找到第1500个丑数
+    * */
+    //只能被2,3,5整除,则连续除以2,3,5,最后结果如果是1,则是丑数
+    private static boolean isUglyNum(int number) {
+        while (number % 2 == 0)
+            number /= 2;
+        while (number % 3 == 0)
+            number /= 3;
+        while (number % 5 == 0)
+            number /= 5;
+        return number == 1;
+    }
+
+    //解法一: 遍历
+    private static int getUglyNum(int index) {
+        if (index <= 0)
+            return 0;
+        int uglyFound = 0;
+        int result = 0;
+        while (uglyFound < index) {
+            result++;
+            if (isUglyNum(result)) {
+//                System.out.println(result);
+                uglyFound++;
+            }
+        }
+        return result;
+    }
+
+    //解法二:
+    private static int getUglyNum2(int index) {
+        if (index <= 0)
+            return 0;
+
+        List<Integer> uglyNums = new LinkedList<>();    //记录已有丑数
+        int uglyFound = 1;  //需要找uglyFound个丑数
+        int M = 1;      //已有最大丑数
+        int T2 = 0;     //在已有丑数中,第一个乘以2比M大的下标
+        int T3 = 0;     //在已有丑数中,第一个乘以3比M大的下标
+        int T5 = 0;     //在已有丑数中,第一个乘以5比M大的下标
+
+        uglyNums.add(M);    //第一个丑数是1,加入到list中
+
+        while (uglyFound < index) {
+            //标志是不是找到相应下标,用来控制在一层循环中完成寻找T2,T3,T5
+            boolean t2IsFound = false;
+            boolean t3IsFound = false;
+            boolean t5IsFound = false;
+            //find T2,T3,T5
+            for (int i = 0; i < uglyNums.size(); i++) {
+                if (!t2IsFound && 2 * uglyNums.get(i) > M) {
+                    T2 = i;
+                    t2IsFound = true;
+                }
+                if (!t3IsFound && 3 * uglyNums.get(i) > M) {
+                    T3 = i;
+                    t3IsFound = true;
+                }
+                if (!t5IsFound && 5 * uglyNums.get(i) > M) {
+                    T5 = i;
+                    t5IsFound = true;
+                }
+            }
+            T2++;
+            T3++;
+            T5++;
+            //update M
+            M = min(2 * T2, 3 * T3, 5 * T5);
+            uglyNums.add(M);
+            uglyFound++;
+        }
+//        System.out.println(uglyNums.get(uglyNums.size()-1));
+        return uglyNums.get(uglyNums.size() - 1);
+    }
+
+    private static int min(int i, int i1, int i2) {
+        int max1 = i <= i1 ? i : i1;
+        return max1 <= i2 ? max1 : i2;
+    }
+
+    /*面试题48,最长不含重复字符的子字符串
+    *
+    * 动态规划
+    * position数组用来存储每个字符上次出现在字符串中位置的下标,没有出现则为-1
+    * f(i)表示以当前字符为结尾的最长不重复子串长度
+    * 当 S(i) 之前没有出现过, f(i) = f(i-1)+1
+    * 否则:
+    *       当distance <= f(i-1), f(i)=d
+    *       否则:    f(i) = f(i-1)+1;
+    *
+    * */
+    private static void longestSubstringWithoutDublication(String str) {
+        if (str.isEmpty()) {
+            return;
+        }
+        int length = str.length();
+        int[] position = new int[26];
+        for (int i = 0; i < 26; i++)
+            position[i] = -1;
+
+        char[] S = str.toCharArray();
+        int[] f = new int[length];
+
+        for (int i = 0; i < length; i++) {
+            if (position[S[i] - 'a'] == -1) { //之前没有出现过
+                if (i > 1)
+                    f[i] = f[i - 1] + 1;
+                else    //如果从0开始
+                    f[i] = 1;
+            } else {
+                int distance = i - position[S[i] - 'a'];    //当前字符距离上次出现的距离
+//                System.out.println(S[i]+ ": "+distance);
+                if (distance > f[i - 1]) {
+                    if (i > 1)
+                        f[i] = f[i - 1] + 1;
+                    else
+                        f[i] = 1;
+                } else {
+                    f[i] = distance;
+                }
+
+            }
+            position[S[i] - 'a'] = i;   //更新当前字符出现的下标
+        }
+        System.out.println(Arrays.toString(f));
+    }
+
+    /*面试题50,第一个只出现一次的字符*/
+    private static void firstSingleChar(String string) {
+        if (string.isEmpty())
+            return;
+        int length = string.length();
+        char[] A = new char[length];
+        int i = length - 1;
+        for (char c : string.toCharArray()) {  //翻转字符串
+            A[i--] = c;
+        }
+//        System.out.println(A);
+        int[] COUNT = new int[256];  //用来存放每个字符出现的次数,字符是8bit的类型,总共有256个字符
+        char lastSingleChar = A[0];
+        for (int j = 0; j < length; j++) {
+            if (COUNT[A[j]] == 0)   //最后一个出现次数为0的就是结果
+                lastSingleChar = A[j];
+            COUNT[A[j]]++;
+        }
+//        System.out.println(Arrays.toString(COUNT));
+        System.out.println(lastSingleChar);
+
+    }
+
+    /*面试题51, 数组中的逆序对
+    *
+    *
+    * */
+    private static int inversePairs(int[] data) {
+        if (data.length == 0)
+            return 0;
+        int[] copy = new int[data.length];
+        System.arraycopy(data, 0, copy, 0, data.length);
+        int count = inversePairsCore(data, copy, 0, data.length - 1);
+        System.out.println(count);
+        return count;
+    }
+
+    private static int inversePairsCore(int[] data, int[] copy, int start, int end) {
+        if (start == end) {
+            copy[start] = data[start];
+            return 0;
+        }
+        int length = (end - start) / 2;
+        int left = inversePairsCore(copy, data, start, start + length); //调换copy和data!精妙!
+        int right = inversePairsCore(copy, data, start + length + 1, end);
+
+        int i = start + length; //前半段最后一个数字下标
+        int j = end;    //后半段最后一个数字下标
+        int copyIndex = end;
+        int count = 0;
+        while (i >= start && j >= start + length + 1) {
+            if (data[i] > data[j]) {
+                count += (j - start - length);
+                copy[copyIndex--] = data[i--];
+            } else {
+                copy[copyIndex--] = data[j--];
+            }
+        }
+        while (i >= start)
+            copy[copyIndex--] = data[i--];
+        while (j >= start + length + 1)
+            copy[copyIndex--] = data[j--];
+        return left + right + count;
+    }
+
+    //C.length = A.length + B.length
+    private static int mergeAndSort(int[] A, int[] B, int[] C) {
+        if (A.length == 0 || B.length == 0)
+            return 0;
+
+        int count = 0;
+        int a = A.length - 1;
+        int b = B.length - 1;
+        int c = A.length + B.length - 1;
+        while (a >= 0 && b >= 0) {
+            if (A[a] > B[b]) {
+                count += b + 1;
+                C[c--] = A[a];
+                a--;
+            } else {
+                C[c--] = B[b];
+                b--;
+            }
+        }
+        //将剩余的放入C中
+        while (a >= 0)
+            C[c--] = A[a--];
+        while (b >= 0)
+            C[c--] = B[b--];
+
+        System.out.println(Arrays.toString(C));
+        System.out.println(count);
+        return count;
+    }
+
+    /*面试题53,题目一:在排序数组中查找数字*/
+
+    /*面试题53,题目二, 0~n-1中缺失的数字
+    * 用二分法查找第一个数值与下标不相同的数字
+    * 如果值与下标相等:left=mid+1
+    * 否则:
+    *       如果前一位值与下标不相等: right = mid -1
+    *       否则: return mid;(找到结果了)
+    * */
+    private static int findMissingNum(int[] num) {
+        if (num.length == 0)
+            return -1;
+        int left = 0;
+        int right = num.length;
+
+        while (left <= right) {
+            int mid = (right + left) >> 1;
+            if (num[mid] == mid) {
+                left = mid + 1;
+            } else {
+                if (mid == 0 || num[mid - 1] == mid - 1) {
+                    right = mid - 1;
+                } else {
+                    return mid;
+                }
+            }
+        }
+        if (left == num.length)
+            return num.length;
+
+        System.out.println(left);
+        return left;
+    }
+
+    /*题目三:查找数组中数值和下标相等的元素*/
+    private static int getNumberSameAsIndex(int[] num) {
+        if (num.length == 0)
+            return -1;
+        int left = 0;
+        int right = num.length;
+        while (left <= right) {
+            int mid = (left + right) >> 1;
+            if (num[mid] == mid) {
+                return mid;
+            } else {
+                if (num[mid] < mid)
+                    left = mid + 1;
+                else
+                    right = mid - 1;
+            }
+        }
+        return -1;
+    }
+
+    /*面试题56,数组中数字出现的次数*/
+    //题目一,数组中祝出现一次的数字
+
+    private static void indexOf1(int[] num) {
+        if (num.length == 0)
+            return;
+        int resultExclusive = 0;
+        for (int n : num)
+            resultExclusive ^= n;
+
+        int indexOf1 = findFirstBiIs1(resultExclusive);
+        int num1 = 0, num2 = 0;
+        for (int n:num){
+            if (isBit1(n, indexOf1))
+                num1 ^= n;
+            else
+                num2 ^= n;
+        }
+        System.out.println(num1);
+        System.out.println(num2);
+    }
+
+    private static int findFirstBiIs1(int num) { //找到最右边是1的位
+        int indexBit1 = 0;
+        while (((num & 1) == 0) && indexBit1 < 32) {
+            num = num >> 1;
+            indexBit1++;
+        }
+        return indexBit1;
+    }
+
+    private static boolean isBit1(int num, int indexBit1) {  //判断num的地indexBit1位是不是1
+        num = num >> indexBit1;
+        return (num & 1) == 1;
+    }
+
+
     public static void main(String[] args) throws Exception {
         //面试题39
 //        int[] num = new int[]{3, 1, 4, 4, 8, 4, 9, 4, 4};
@@ -501,9 +814,9 @@ public class Common {
 //        addFlowNums(num);
 
         //面试题42
-        int[] nums = new int[]{1, -2, 3, 10, -4, 7, 2, -5};
-        greatestSumOfSubArray(nums);
-        greatestSumOfSubArray2(nums);
+//        int[] nums = new int[]{1, -2, 3, 10, -4, 7, 2, -5};
+//        greatestSumOfSubArray(nums);
+//        greatestSumOfSubArray2(nums);
 
         //面试题45
 //        int[] nums = new int[]{3,32,321,5,1,64,4};
@@ -518,12 +831,34 @@ public class Common {
 
 
         //面试题47
-        int[] values = new int[]{1, 10, 3, 8, 12, 2, 9, 6, 5, 7, 4, 11, 3, 7, 16, 5};
-        int rows = 4;
-        int cols = 4;
-        int maxValues = getMaxValue_solution1(values, rows, cols);
-        System.out.println(maxValues);
+//        int[] values = new int[]{1, 10, 3, 8, 12, 2, 9, 6, 5, 7, 4, 11, 3, 7, 16, 5};
+//        int rows = 4;
+//        int cols = 4;
+//        int maxValues = getMaxValue_solution1(values, rows, cols);
+//        System.out.println(maxValues);
+        //面试题49
+//        System.out.println(getUglyNum(10));
+//        System.out.println(getUglyNum2(10));
 
+//        System.out.println('a' - 97);
+//        System.out.println('b' - 97);
+        //面试题48
+//        longestSubstringWithoutDublication("arabcacfr");
+
+        //面试题50
+//        firstSingleChar("abaccdeff");
+
+        //面试题51
+//        mergeAndSort(new int[]{5, 7}, new int[]{4}, new int[3]);
+//        inversePairs(new int[]{7, 5, 6, 4});
+
+//        System.out.println(findMissingNum(new int[]{0, 1, 2, 4, 5, 6}));
+//        System.out.println(getNumberSameAsIndex(new int[]{-3,-1,1,3,5}));
+
+        //面试题题56
+//        System.out.println(3 ^ 4 );
+//        System.out.println(findFirstBiIs1(4));
+        indexOf1(new int[]{2, 4, 3, 6, 3, 2, 5, 5});
 
     }
 
