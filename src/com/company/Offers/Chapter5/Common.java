@@ -771,7 +771,7 @@ public class Common {
 
         int indexOf1 = findFirstBiIs1(resultExclusive);
         int num1 = 0, num2 = 0;
-        for (int n:num){
+        for (int n : num) {
             if (isBit1(n, indexOf1))
                 num1 ^= n;
             else
@@ -795,6 +795,25 @@ public class Common {
         return (num & 1) == 1;
     }
 
+    /*面试题57,和为s的数字*/
+    private static void findNumbersWithSum(int[] data, int sum) {
+        int length = data.length;
+        if (length == 0)
+            return;
+        int i = 0, j = length - 1;
+        while (i < j) {
+            int temSum = data[i] + data[j];
+            if (temSum == sum) {
+                System.out.println("find: num1:" + data[i] + "num2:" + data[j]);
+                break;
+            }
+            if (temSum < sum)
+                i++;
+            if (temSum > sum)
+                j--;
+        }
+
+    }
 
     public static void main(String[] args) throws Exception {
         //面试题39
@@ -858,7 +877,11 @@ public class Common {
         //面试题题56
 //        System.out.println(3 ^ 4 );
 //        System.out.println(findFirstBiIs1(4));
-        indexOf1(new int[]{2, 4, 3, 6, 3, 2, 5, 5});
+//        indexOf1(new int[]{2, 4, 3, 6, 3, 2, 5, 5});
+
+
+        //
+        findNumbersWithSum(new int[]{1, 2, 4, 7, 11, 15}, 15);
 
     }
 
